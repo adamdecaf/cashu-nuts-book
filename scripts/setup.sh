@@ -4,7 +4,7 @@ if [ -d 'nuts' ];
 then
     echo "Updating cashubtc/nuts"
     cd nuts
-    git pull origin master
+    git pull origin main
     cd - 2>&1 > /dev/null
 else
     echo "Pulling cashubtc/nuts"

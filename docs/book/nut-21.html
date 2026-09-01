@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="compiled by Adam Shannon" />
+  <meta name="keywords" content="cashu, nuts, ecash, bitcoin, lightning, chaumian" />
+  <title>NUT-21: Clear Authentication · Cashu Book of NUTs</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../web.css" />
+</head>
+<body class="book">
+  <header class="site">
+    <a class="brand" href="../">Cashu Book of NUTs</a>
+    <button type="button" id="toc-toggle" aria-controls="TOC" aria-expanded="false">Contents</button>
+    <nav class="site-links">
+      <a href="index.html">Contents</a>
+      <a href="https://github.com/adamdecaf/cashu-nuts-book/raw/master/cashu-book.epub">ePUB</a>
+      <a href="https://github.com/adamdecaf/cashu-nuts-book/raw/master/cashu-book.pdf">PDF</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" role="doc-toc">
+      <h2 id="toc-title">Contents</h2>
+      <ul>
+      <li><a href="introduction.html#introduction"
+      id="toc-introduction">Introduction</a></li>
+      <li><a href="how-to-read-this-book.html#how-to-read-this-book"
+      id="toc-how-to-read-this-book">How to read this book</a></li>
+      <li><a href="source-snapshot.html#source-snapshot"
+      id="toc-source-snapshot">Source snapshot</a></li>
+      <li><a href="core-protocol.html#core-protocol"
+      id="toc-core-protocol">Core protocol</a>
+      <ul>
+      <li><a href="nut-00.html#nut-00" id="toc-nut-00">NUT-00: Notation,
+      Utilization, and Terminology</a></li>
+      <li><a href="nut-01.html#nut-01" id="toc-nut-01">NUT-01: Mint public key
+      exchange</a></li>
+      <li><a href="nut-02.html#nut-02" id="toc-nut-02">NUT-02: Keysets and
+      fees</a></li>
+      <li><a href="nut-06.html#nut-06" id="toc-nut-06">NUT-06: Mint
+      information</a></li>
+      </ul></li>
+      <li><a
+      href="minting-melting-and-swapping.html#minting-melting-and-swapping"
+      id="toc-minting-melting-and-swapping">Minting, melting, and swapping</a>
+      <ul>
+      <li><a href="nut-03.html#nut-03" id="toc-nut-03">NUT-03: Swap
+      tokens</a></li>
+      <li><a href="nut-04.html#nut-04" id="toc-nut-04">NUT-04: Mint
+      tokens</a></li>
+      <li><a href="nut-05.html#nut-05" id="toc-nut-05">NUT-05: Melting
+      tokens</a></li>
+      <li><a href="nut-08.html#nut-08" id="toc-nut-08">NUT-08: Lightning fee
+      return</a></li>
+      <li><a href="nut-15.html#nut-15" id="toc-nut-15">NUT-15: Partial
+      multi-path payments</a></li>
+      <li><a href="nut-20.html#nut-20" id="toc-nut-20">NUT-20: Signature on
+      Mint Quote</a></li>
+      <li><a href="nut-29.html#nut-29" id="toc-nut-29">NUT-29: Batched
+      Minting</a></li>
+      </ul></li>
+      <li><a
+      href="proofs-restore-and-wallet-state.html#proofs-restore-and-wallet-state"
+      id="toc-proofs-restore-and-wallet-state">Proofs, restore, and wallet
+      state</a>
+      <ul>
+      <li><a href="nut-07.html#nut-07" id="toc-nut-07">NUT-07: Token state
+      check</a></li>
+      <li><a href="nut-09.html#nut-09" id="toc-nut-09">NUT-09: Restore
+      signatures</a></li>
+      <li><a href="nut-12.html#nut-12" id="toc-nut-12">NUT-12: Offline ecash
+      signature validation</a></li>
+      <li><a href="nut-13.html#nut-13" id="toc-nut-13">NUT-13: Deterministic
+      Secrets</a></li>
+      <li><a href="nut-19.html#nut-19" id="toc-nut-19">NUT-19: Cached
+      Responses</a></li>
+      </ul></li>
+      <li><a href="spending-conditions.html#spending-conditions"
+      id="toc-spending-conditions">Spending conditions</a>
+      <ul>
+      <li><a href="nut-10.html#nut-10" id="toc-nut-10">NUT-10: Spending
+      conditions</a></li>
+      <li><a href="nut-11.html#nut-11" id="toc-nut-11">NUT-11: Pay to Public
+      Key (P2PK)</a></li>
+      <li><a href="nut-14.html#nut-14" id="toc-nut-14">NUT-14: Hashed Timelock
+      Contracts (HTLCs)</a></li>
+      <li><a href="nut-28.html#nut-28" id="toc-nut-28">NUT-28:
+      Pay-to-Blinded-Key (P2BK)</a></li>
+      </ul></li>
+      <li><a
+      href="lightning-and-other-payment-methods.html#lightning-and-other-payment-methods"
+      id="toc-lightning-and-other-payment-methods">Lightning and other payment
+      methods</a>
+      <ul>
+      <li><a href="nut-23.html#nut-23" id="toc-nut-23">NUT-23: BOLT11</a></li>
+      <li><a href="nut-25.html#nut-25" id="toc-nut-25">NUT-25: BOLT12</a></li>
+      <li><a href="nut-24.html#nut-24" id="toc-nut-24">NUT-24: HTTP 402
+      Payment Required</a></li>
+      <li><a href="nut-30.html#nut-30" id="toc-nut-30">NUT-30: Payment Method:
+      Onchain</a></li>
+      </ul></li>
+      <li><a
+      href="requests-and-user-experience.html#requests-and-user-experience"
+      id="toc-requests-and-user-experience">Requests and user experience</a>
+      <ul>
+      <li><a href="nut-16.html#nut-16" id="toc-nut-16">NUT-16: Animated QR
+      codes</a></li>
+      <li><a href="nut-18.html#nut-18" id="toc-nut-18">NUT-18: Payment
+      Requests</a></li>
+      <li><a href="nut-26.html#nut-26" id="toc-nut-26">NUT-26: Payment Request
+      Bech32m Encoding</a></li>
+      </ul></li>
+      <li><a
+      href="realtime-and-authentication.html#realtime-and-authentication"
+      id="toc-realtime-and-authentication">Realtime and authentication</a>
+      <ul>
+      <li><a href="nut-17.html#nut-17" id="toc-nut-17">NUT-17:
+      WebSockets</a></li>
+      <li><a href="nut-21.html#nut-21" id="toc-nut-21">NUT-21: Clear
+      Authentication</a></li>
+      <li><a href="nut-22.html#nut-22" id="toc-nut-22">NUT-22: Blind
+      Authentication</a></li>
+      </ul></li>
+      <li><a href="nostr-integration.html#nostr-integration"
+      id="toc-nostr-integration">Nostr integration</a>
+      <ul>
+      <li><a href="nut-27.html#nut-27" id="toc-nut-27">NUT-27: Nostr Mint
+      Backup</a></li>
+      </ul></li>
+      <li><a href="conclusion.html#conclusion"
+      id="toc-conclusion">Conclusion</a></li>
+      </ul>
+    </nav>
+    <div class="main">
+      <nav class="pager" aria-label="Nearby sections">
+        <a class="pager-prev" href="nut-17.html" accesskey="p" rel="prev">NUT-17: WebSockets</a>
+        <a class="pager-next" href="nut-22.html" accesskey="n" rel="next">NUT-22: Blind Authentication</a>
+      </nav>
+      <h2 data-number="10.2" id="nut-21">NUT-21: Clear
+      Authentication</h2>
+      <p><code>optional</code></p>
+      <p><code>used in: NUT-22</code></p>
+      <hr />
+      <p>This NUT defines a clear authentication scheme that allows
+      operators to limit the use of their mint to registered users using
+      the OAuth 2.0 and OpenID Connect protocols. The mint operator can
+      protect chosen endpoints from access by requiring user
+      authentication. Only users that provide a clear authentication
+      token (CAT) from the specified OpenID Connect (OIDC) service can
+      use the protected endpoints. The CAT is an Oauth 2.0 Access token
+      (also known as the <code>access_token</code>) commonly in the form
+      of a JWT that contains user information, a signature from the OIDC
+      service, and an expiry time. To access protected endpoints, the
+      wallet includes the CAT in the HTTP request header.</p>
+      <p><strong>Note:</strong> The primary purpose of this NUT is to
+      restrict access to a mint by allowing registered users to obtain
+      Blind Authentication Tokens as specified in <a
+      href="nut-22.html">NUT-22</a>.</p>
+      <p><strong>Warning:</strong> This authentication scheme breaks the
+      user’s privacy as the CAT contains user information. Mint
+      operators SHOULD require clear authentication <strong>only on
+      selected endpoints</strong>, such as those for obtaining blind
+      authentication tokens (BATs, see <a
+      href="nut-22.html">NUT-22</a>).</p>
+      <h3 data-number="10.2.1"
+      id="nut-21-openid-connect-service-configuration">OpenID Connect
+      service configuration</h3>
+      <p>The OpenID Connect (OIDC) service is typically run by the mint
+      operator (but it does not have to be). The OIDC service must be
+      configured to meet the following criteria:</p>
+      <ul>
+      <li><strong>No client secret:</strong> The OIDC service MUST NOT
+      use a client secret.</li>
+      <li><strong>Authorization code flow:</strong> The OIDC service
+      MUST enable the <em>authorization code flow</em> with PKCE for
+      public clients, so that an authorization code can be exchanged for
+      an access token and a refresh token.</li>
+      <li><strong>Signature algorithm:</strong> The OIDC service MUST
+      support at least one of the two asymmetric JWS signature
+      algorithms for access token and ID token signatures:
+      <code>ES256</code> and <code>RS256</code>.</li>
+      <li><strong>Wallet redirect URLs:</strong> To support the OpenID
+      Connect Authorization Code flow, the OIDC service MUST allow
+      redirect URLs that correspond to the wallets it wants to support.
+      You can find a list of common redirect URLs for well-known Cashu
+      wallets <a href="nut-21.html">here</a>.</li>
+      <li><strong>Localhost redirect URL:</strong> The OIDC service MUST
+      also allow redirects to the URL
+      <code>http://localhost:33388/callback</code>.</li>
+      <li><strong>Authentication flows:</strong> Although, strictly
+      speaking, this NUT does not restrict the OpenID Connect grant
+      types that can be used to obtain a CAT, it is recommended to
+      enable at least the <code>authorization_code</code> (Authorization
+      Code) flow and the
+      <code>urn:ietf:params:oauth:grant-type:device_code</code> (Device
+      Code) flow in the <code>grant_types_supported</code> field of the
+      <code>openid_discovery</code> configuration. The
+      <code>password</code> (Resource Owner Password Credentials, ROPC)
+      flow SHOULD NOT be used as it requires handling the user’s
+      credentials in the wallet application.</li>
+      </ul>
+      <h3 data-number="10.2.2" id="nut-21-mint">Mint</h3>
+      <h4 data-number="10.2.2.1"
+      id="nut-21-signalling-protected-endpoints">Signalling protected
+      endpoints</h4>
+      <p>The mint lists each protected endpoint that requires a clear
+      authentication token (CAT) in the
+      <code>MintClearAuthSetting</code> in its <a
+      href="nut-06.html">NUT-06</a> info response:</p>
+      <pre class="json"><code>&quot;21&quot; : {
+  &quot;openid_discovery&quot;: &quot;https://mint.com:8080/realms/nutshell/.well-known/openid-configuration&quot;,
+  &quot;client_id&quot;: &quot;cashu-client&quot;,
+  &quot;protected_endpoints&quot;: [
+    {
+        &quot;method&quot;: &quot;POST&quot;,
+        &quot;path&quot;: &quot;/v1/auth/blind/mint&quot;
+    }
+  ]
+}</code></pre>
+      <p><code>openid_discovery</code> is the OpenID Connect Discovery
+      endpoint which has all the information necessary for a client to
+      authenticate with the service.</p>
+      <p><code>client_id</code> is the OpenID Connect Client ID that the
+      wallet needs to use to authenticate.</p>
+      <p><code>protected_endpoints</code> is an array of objects that
+      specify each endpoint that requires a CAT in the request headers.
+      <code>method</code> is the HTTP method, and <code>path</code> is
+      either:</p>
+      <ol type="1">
+      <li><strong>Exact match</strong>: no trailing <code>*</code> →
+      request path MUST equal <code>path</code></li>
+      <li><strong>Prefix match</strong>: ends with <code>*</code> →
+      request path MUST start with the prefix (<code>*</code>
+      removed)</li>
+      </ol>
+      <p>The <code>*</code> wildcard, if present, MUST be the final
+      character only.</p>
+      <p>For example:</p>
+      <ul>
+      <li><code>/v1/*</code> matches any path starting <code>/v1/</code>
+      (all endpoints)</li>
+      <li><code>/v1/auth/*</code> matches any path that starts with
+      <code>/v1/auth/</code> (all auth endpoints)</li>
+      <li><code>/v1/mint/*</code> matches any path that starts with
+      <code>/v1/mint/</code> (all minting endpoints)</li>
+      <li><code>/v1/mint/bolt*</code> matches any path starting
+      <code>/v1/mint/bolt</code> (bolt11/12 minting endpoints)</li>
+      </ul>
+      <p>In the example above, the <code>/v1/auth/blind/mint</code> path
+      is the <strong>exact match</strong> <a
+      href="nut-22.html">NUT-22</a> endpoint for obtaining blind
+      authentication tokens (BATs).</p>
+      <blockquote>
+      <p>[!CAUTION] Wallets <strong>MUST</strong> treat mint provided
+      <code>path</code> values as untrusted input and use exact or
+      prefix matching only. Never use regex matching on untrusted
+      input.</p>
+      </blockquote>
+      <h4 data-number="10.2.2.2"
+      id="nut-21-clear-authentication-token-verification">Clear
+      authentication token verification</h4>
+      <p>When receiving a request to a protected endpoint, the mint
+      checks the included CAT (which is a JWT) in the HTTP request
+      header (see below in section <a
+      href="nut-21.html#nut-21-cat-in-request-header">Wallet</a>) and
+      verifies the JWT. To verify the JWT, the mint checks the signature
+      of the OIDC and the expiry of the JWT.</p>
+      <p>The JWT includes a <code>sub</code> field which identifies a
+      specific user. The <code>sub</code> identifier can, for example,
+      be used to rate limit the user.</p>
+      <p><strong>Note:</strong> The JWT <em>MAY</em> include an
+      <em>audience</em> field called <code>aud</code> that contains the
+      mint’s public key</p>
+      <p>More on OpenID Connect ID token validation <a
+      href="https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">here</a>.</p>
+      <h3 data-number="10.2.3" id="nut-21-wallet">Wallet</h3>
+      <p>To make a request to one of the
+      <code>protected_endpoints</code> of the mint, the wallet needs to
+      obtain a valid clear auth token (CAT) from the OIDC service. The
+      wallet uses the <code>openid_discovery</code> URL in the
+      <code>MintClearAuthSetting</code> from the info endpoint of the
+      mint to authenticate with the OIDC service and obtain a CAT.</p>
+      <h4 data-number="10.2.3.1" id="nut-21-obtaining-a-cat">Obtaining a
+      CAT</h4>
+      <p>Depending on the wallet implementation and use case, an
+      appropriate authorization flow should be used. For mobile wallets,
+      the Authorization Code is recommended. For command-line wallets,
+      the Device Code flow is recommended. For headless wallets, the
+      ROPC flow may be used.</p>
+      <p>It is recommended to use language-specific libraries that can
+      handle OpenID Connect authentication on behalf of the user. The
+      wallet should be able to handle and store access tokens and
+      refresh tokens for each mint that it authenticates with. If the
+      wallet connects to a mint for the first time, or if the refresh
+      token is about to expire, the wallet should allow the user to log
+      in again to obtain a new access token (<code>access_token</code>)
+      and a new refresh token (<code>refresh_token</code>).</p>
+      <p>The <code>access_token</code> is what is referred to as a clear
+      authentication token (CAT) throughout this document.</p>
+      <h4 data-number="10.2.3.2" id="nut-21-cat-in-request-header">CAT
+      in request header</h4>
+      <p>When making a request to the mint’s endpoint, the wallet
+      matches the requested URL with the
+      <code>protected_endpoints</code> from the
+      <code>MintClearAuthSetting</code> (either exact match or prefix
+      pattern match). If the match is positive, the mint requires the
+      wallet to provide a CAT with the request.</p>
+      <p>After obtaining a CAT from the OIDC service, the wallet
+      includes a valid CAT in the HTTP request header when it makes
+      requests to one of the mint’s
+      <code>protected_endpoints</code>:</p>
+      <pre><code>Clear-auth: &lt;CAT&gt;</code></pre>
+      <p>The <code>CAT</code> is a JWT (or <code>access_token</code>)
+      encoded with base64 that is signed by and obtained from the OIDC
+      authority. The mint verifies the JWT as described <a
+      href="nut-21.html#nut-21-clear-authentication-token-verification">above</a>.</p>
+      <h3 data-number="10.2.4" id="nut-21-error-codes">Error codes</h3>
+      <p>See <a href="error_codes.md">Error Codes</a>:</p>
+      <ul>
+      <li><code>30001</code>: Endpoint requires clear auth</li>
+      <li><code>30002</code>: Clear authentication failed</li>
+      </ul>
+      <nav class="pager pager-bottom" aria-label="Nearby sections">
+        <a class="pager-prev" href="nut-17.html" rel="prev">NUT-17: WebSockets</a>
+        <a class="pager-next" href="nut-22.html" rel="next">NUT-22: Blind Authentication</a>
+      </nav>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var btn = document.getElementById("toc-toggle");
+      var toc = document.getElementById("TOC");
+      var page = (location.pathname.split("/").pop() || "index.html");
+      if (toc) {
+        toc.querySelectorAll("a").forEach(function (a) {
+          var href = a.getAttribute("href") || "";
+          if (href.split("#")[0] === page) a.classList.add("current");
+        });
+        var current = toc.querySelector("a.current");
+        if (current) current.scrollIntoView({ block: "center" });
+      }
+      document.querySelectorAll(".main h1[id], .main h2[id], .main h3[id], .main h4[id], .main h5[id], .main h6[id]").forEach(function (h) {
+        if (h.querySelector(".header-anchor")) return;
+        var a = document.createElement("a");
+        a.className = "header-anchor";
+        a.href = "#" + h.id;
+        a.setAttribute("aria-label", "Link to this heading");
+        a.textContent = "\u00B6";
+        h.appendChild(a);
+      });
+      if (!btn) return;
+      btn.addEventListener("click", function () {
+        var open = document.body.classList.toggle("toc-open");
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+      toc && toc.addEventListener("click", function (e) {
+        if (e.target.closest("a") && window.matchMedia("(max-width: 879px)").matches) {
+          document.body.classList.remove("toc-open");
+          btn.setAttribute("aria-expanded", "false");
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

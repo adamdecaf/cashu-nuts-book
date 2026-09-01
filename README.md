@@ -8,7 +8,7 @@ The book is compiled by Adam Shannon. The NUTs are written by their original aut
 
 ## Get the book
 
-- Website: [adamdecaf.github.io/cashu-nuts-book](https://adamdecaf.github.io/cashu-nuts-book/)
+- Read online: [adamdecaf.github.io/cashu-nuts-book](https://adamdecaf.github.io/cashu-nuts-book/) ([contents](https://adamdecaf.github.io/cashu-nuts-book/book/))
 - [ePUB](https://github.com/adamdecaf/cashu-nuts-book/raw/master/cashu-book.epub)
 - [PDF](https://github.com/adamdecaf/cashu-nuts-book/raw/master/cashu-book.pdf)
 
@@ -37,11 +37,10 @@ Editorial wrapping lives in `include/`. Reading order lives in `scripts/create.s
 
 ## Development
 
-You need [pandoc](https://github.com/jgm/pandoc/blob/main/INSTALL.md) and a LaTeX engine for PDF. On macOS:
+You need [pandoc](https://github.com/jgm/pandoc/blob/main/INSTALL.md). PDF uses [WeasyPrint](https://weasyprint.org/) when it is installed (`xelatex` is a fallback). On macOS:
 
 ```
-brew install pandoc basictex
-eval "$(/usr/libexec/path_helper)"
+brew install pandoc weasyprint
 ```
 
 Clone this repo, then pull the NUTs and build:
@@ -50,6 +49,7 @@ Clone this repo, then pull the NUTs and build:
 make setup    # clones or updates cashubtc/nuts into ./nuts
 make epub
 make pdf
+make html     # writes the web book into docs/book/
 ```
 
 `make setup` also writes the upstream git commit into `include/git.md` so the book records which snapshot it was built from.

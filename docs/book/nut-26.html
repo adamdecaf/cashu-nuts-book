@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="compiled by Adam Shannon" />
+  <meta name="keywords" content="cashu, nuts, ecash, bitcoin, lightning, chaumian" />
+  <title>NUT-26: Payment Request Bech32m Encoding · Cashu Book of
+NUTs</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../web.css" />
+</head>
+<body class="book">
+  <header class="site">
+    <a class="brand" href="../">Cashu Book of NUTs</a>
+    <button type="button" id="toc-toggle" aria-controls="TOC" aria-expanded="false">Contents</button>
+    <nav class="site-links">
+      <a href="index.html">Contents</a>
+      <a href="https://github.com/adamdecaf/cashu-nuts-book/raw/master/cashu-book.epub">ePUB</a>
+      <a href="https://github.com/adamdecaf/cashu-nuts-book/raw/master/cashu-book.pdf">PDF</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" role="doc-toc">
+      <h2 id="toc-title">Contents</h2>
+      <ul>
+      <li><a href="introduction.html#introduction"
+      id="toc-introduction">Introduction</a></li>
+      <li><a href="how-to-read-this-book.html#how-to-read-this-book"
+      id="toc-how-to-read-this-book">How to read this book</a></li>
+      <li><a href="source-snapshot.html#source-snapshot"
+      id="toc-source-snapshot">Source snapshot</a></li>
+      <li><a href="core-protocol.html#core-protocol"
+      id="toc-core-protocol">Core protocol</a>
+      <ul>
+      <li><a href="nut-00.html#nut-00" id="toc-nut-00">NUT-00: Notation,
+      Utilization, and Terminology</a></li>
+      <li><a href="nut-01.html#nut-01" id="toc-nut-01">NUT-01: Mint public key
+      exchange</a></li>
+      <li><a href="nut-02.html#nut-02" id="toc-nut-02">NUT-02: Keysets and
+      fees</a></li>
+      <li><a href="nut-06.html#nut-06" id="toc-nut-06">NUT-06: Mint
+      information</a></li>
+      </ul></li>
+      <li><a
+      href="minting-melting-and-swapping.html#minting-melting-and-swapping"
+      id="toc-minting-melting-and-swapping">Minting, melting, and swapping</a>
+      <ul>
+      <li><a href="nut-03.html#nut-03" id="toc-nut-03">NUT-03: Swap
+      tokens</a></li>
+      <li><a href="nut-04.html#nut-04" id="toc-nut-04">NUT-04: Mint
+      tokens</a></li>
+      <li><a href="nut-05.html#nut-05" id="toc-nut-05">NUT-05: Melting
+      tokens</a></li>
+      <li><a href="nut-08.html#nut-08" id="toc-nut-08">NUT-08: Lightning fee
+      return</a></li>
+      <li><a href="nut-15.html#nut-15" id="toc-nut-15">NUT-15: Partial
+      multi-path payments</a></li>
+      <li><a href="nut-20.html#nut-20" id="toc-nut-20">NUT-20: Signature on
+      Mint Quote</a></li>
+      <li><a href="nut-29.html#nut-29" id="toc-nut-29">NUT-29: Batched
+      Minting</a></li>
+      </ul></li>
+      <li><a
+      href="proofs-restore-and-wallet-state.html#proofs-restore-and-wallet-state"
+      id="toc-proofs-restore-and-wallet-state">Proofs, restore, and wallet
+      state</a>
+      <ul>
+      <li><a href="nut-07.html#nut-07" id="toc-nut-07">NUT-07: Token state
+      check</a></li>
+      <li><a href="nut-09.html#nut-09" id="toc-nut-09">NUT-09: Restore
+      signatures</a></li>
+      <li><a href="nut-12.html#nut-12" id="toc-nut-12">NUT-12: Offline ecash
+      signature validation</a></li>
+      <li><a href="nut-13.html#nut-13" id="toc-nut-13">NUT-13: Deterministic
+      Secrets</a></li>
+      <li><a href="nut-19.html#nut-19" id="toc-nut-19">NUT-19: Cached
+      Responses</a></li>
+      </ul></li>
+      <li><a href="spending-conditions.html#spending-conditions"
+      id="toc-spending-conditions">Spending conditions</a>
+      <ul>
+      <li><a href="nut-10.html#nut-10" id="toc-nut-10">NUT-10: Spending
+      conditions</a></li>
+      <li><a href="nut-11.html#nut-11" id="toc-nut-11">NUT-11: Pay to Public
+      Key (P2PK)</a></li>
+      <li><a href="nut-14.html#nut-14" id="toc-nut-14">NUT-14: Hashed Timelock
+      Contracts (HTLCs)</a></li>
+      <li><a href="nut-28.html#nut-28" id="toc-nut-28">NUT-28:
+      Pay-to-Blinded-Key (P2BK)</a></li>
+      </ul></li>
+      <li><a
+      href="lightning-and-other-payment-methods.html#lightning-and-other-payment-methods"
+      id="toc-lightning-and-other-payment-methods">Lightning and other payment
+      methods</a>
+      <ul>
+      <li><a href="nut-23.html#nut-23" id="toc-nut-23">NUT-23: BOLT11</a></li>
+      <li><a href="nut-25.html#nut-25" id="toc-nut-25">NUT-25: BOLT12</a></li>
+      <li><a href="nut-24.html#nut-24" id="toc-nut-24">NUT-24: HTTP 402
+      Payment Required</a></li>
+      <li><a href="nut-30.html#nut-30" id="toc-nut-30">NUT-30: Payment Method:
+      Onchain</a></li>
+      </ul></li>
+      <li><a
+      href="requests-and-user-experience.html#requests-and-user-experience"
+      id="toc-requests-and-user-experience">Requests and user experience</a>
+      <ul>
+      <li><a href="nut-16.html#nut-16" id="toc-nut-16">NUT-16: Animated QR
+      codes</a></li>
+      <li><a href="nut-18.html#nut-18" id="toc-nut-18">NUT-18: Payment
+      Requests</a></li>
+      <li><a href="nut-26.html#nut-26" id="toc-nut-26">NUT-26: Payment Request
+      Bech32m Encoding</a></li>
+      </ul></li>
+      <li><a
+      href="realtime-and-authentication.html#realtime-and-authentication"
+      id="toc-realtime-and-authentication">Realtime and authentication</a>
+      <ul>
+      <li><a href="nut-17.html#nut-17" id="toc-nut-17">NUT-17:
+      WebSockets</a></li>
+      <li><a href="nut-21.html#nut-21" id="toc-nut-21">NUT-21: Clear
+      Authentication</a></li>
+      <li><a href="nut-22.html#nut-22" id="toc-nut-22">NUT-22: Blind
+      Authentication</a></li>
+      </ul></li>
+      <li><a href="nostr-integration.html#nostr-integration"
+      id="toc-nostr-integration">Nostr integration</a>
+      <ul>
+      <li><a href="nut-27.html#nut-27" id="toc-nut-27">NUT-27: Nostr Mint
+      Backup</a></li>
+      </ul></li>
+      <li><a href="conclusion.html#conclusion"
+      id="toc-conclusion">Conclusion</a></li>
+      </ul>
+    </nav>
+    <div class="main">
+      <nav class="pager" aria-label="Nearby sections">
+        <a class="pager-prev" href="nut-18.html" accesskey="p" rel="prev">NUT-18: Payment Requests</a>
+        <a class="pager-next" href="realtime-and-authentication.html" accesskey="n" rel="next">Realtime and authentication</a>
+      </nav>
+      <h2 data-number="9.3" id="nut-26">NUT-26: Payment Request Bech32m
+      Encoding</h2>
+      <p><code>optional</code> <code>depends on: NUT-18</code></p>
+      <hr />
+      <p>This specification defines an alternative encoding format for
+      Payment Requests using Bech32m encoding with TLV
+      (Tag-Length-Value) serialization. This format provides better QR
+      code compatibility and typically 30-60% size reduction compared to
+      the CBOR+base64 encoding defined in NUT-18.</p>
+      <h3 data-number="9.3.1" id="nut-26-encoded-request-format">Encoded
+      Request Format</h3>
+      <p>Payment requests are serialized using TLV encoding, then
+      encoded with Bech32m:</p>
+      <p><code>"creqb" + "1" + bech32m(TLV(PaymentRequest))</code></p>
+      <p>The human-readable part (HRP) is <code>"creqb"</code> and the
+      version separator is <code>"1"</code>. The data payload is
+      TLV-encoded as described below, then encoded with Bech32m (not
+      standard Bech32).</p>
+      <blockquote>
+      <p>[!NOTE] Implementations SHOULD output uppercase Bech32m strings
+      for optimal QR code compatibility. Uppercase alphanumeric
+      characters use QR “alphanumeric mode” which is more
+      space-efficient than “byte mode” required for mixed-case. Decoders
+      MUST accept both uppercase and lowercase input.</p>
+      </blockquote>
+      <p>When parsing a <code>creq</code> parameter, implementations
+      SHOULD support both formats:</p>
+      <ol type="1">
+      <li>If the parameter starts with <code>creqA</code>
+      (case-insensitive), parse as NUT-18 CBOR+base64 format</li>
+      <li>If the parameter is valid Bech32m with HRP <code>creqb</code>,
+      parse as NUT-26 format</li>
+      <li>Otherwise, return an error</li>
+      </ol>
+      <h3 data-number="9.3.2" id="nut-26-tlv-structure">TLV
+      Structure</h3>
+      <p>The payment request is encoded as a sequence of TLV fields.
+      Each TLV entry consists of:</p>
+      <ul>
+      <li><strong>Type</strong> (1 byte): Field identifier</li>
+      <li><strong>Length</strong> (2 bytes, big-endian): Length of value
+      in bytes</li>
+      <li><strong>Value</strong> (variable): Field data</li>
+      </ul>
+      <p>Fields of type <code>u64</code> are encoded as fixed 8-byte
+      big-endian values.</p>
+      <h4 data-number="9.3.2.1" id="nut-26-top-level-tlv-tags">Top-Level
+      TLV Tags</h4>
+      <table>
+      <colgroup>
+      <col style="width: 3%" />
+      <col style="width: 12%" />
+      <col style="width: 7%" />
+      <col style="width: 76%" />
+      </colgroup>
+      <thead>
+      <tr>
+      <th>Tag</th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>0x01</td>
+      <td>id</td>
+      <td>string</td>
+      <td>Payment identifier (corresponds to <code>i</code> in
+      JSON)</td>
+      </tr>
+      <tr>
+      <td>0x02</td>
+      <td>amount</td>
+      <td>u64</td>
+      <td>Amount in base units (corresponds to <code>a</code> in
+      JSON)</td>
+      </tr>
+      <tr>
+      <td>0x03</td>
+      <td>unit</td>
+      <td>u8/string</td>
+      <td>Currency unit (corresponds to <code>u</code> in JSON)</td>
+      </tr>
+      <tr>
+      <td>0x04</td>
+      <td>single_use</td>
+      <td>u8</td>
+      <td>Single-use flag: 0=false, 1=true (corresponds to
+      <code>s</code> in JSON)</td>
+      </tr>
+      <tr>
+      <td>0x05</td>
+      <td>mint</td>
+      <td>string</td>
+      <td>Mint URL (repeatable for multiple mints, corresponds to
+      <code>m</code> in JSON)</td>
+      </tr>
+      <tr>
+      <td>0x06</td>
+      <td>description</td>
+      <td>string</td>
+      <td>Human-readable description (corresponds to <code>d</code> in
+      JSON)</td>
+      </tr>
+      <tr>
+      <td>0x07</td>
+      <td>transport</td>
+      <td>sub-TLV</td>
+      <td>Transport configuration (repeatable, corresponds to
+      <code>t</code> in JSON)</td>
+      </tr>
+      <tr>
+      <td>0x08</td>
+      <td>nut10</td>
+      <td>sub-TLV</td>
+      <td>NUT-10 spending conditions (corresponds to <code>nut10</code>
+      in JSON)</td>
+      </tr>
+      <tr>
+      <td>0x09</td>
+      <td>mint_preferred</td>
+      <td>u8</td>
+      <td>Mint list strictness flag: 0=false, 1=true; defaults to 0 if
+      absent (corresponds to <code>mp</code> in JSON)</td>
+      </tr>
+      <tr>
+      <td>0x0a</td>
+      <td>supported_method</td>
+      <td>sub-TLV</td>
+      <td>Supported payment method with optional fee (repeatable,
+      corresponds to <code>sm</code> in JSON)</td>
+      </tr>
+      </tbody>
+      </table>
+      <p>All fields are optional. Unknown tags MUST be ignored to
+      maintain forward compatibility.</p>
+      <h4 data-number="9.3.2.2" id="nut-26-unit-encoding-tag-0x03">Unit
+      Encoding (Tag 0x03)</h4>
+      <p>The unit field uses a compact encoding:</p>
+      <ul>
+      <li><strong>Value 0x00</strong>: Represents <code>sat</code>
+      (Bitcoin satoshis)</li>
+      <li><strong>String value</strong>: Any other unit is encoded as a
+      UTF-8 string (e.g., <code>"msat"</code>, <code>"usd"</code>,
+      <code>"eur"</code>)</li>
+      </ul>
+      <h4 data-number="9.3.2.3"
+      id="nut-26-transport-sub-tlv-tag-0x07">Transport Sub-TLV (Tag
+      0x07)</h4>
+      <p>Transport configurations are encoded as nested TLV structures.
+      Each transport has the following sub-tags:</p>
+      <table>
+      <colgroup>
+      <col style="width: 9%" />
+      <col style="width: 11%" />
+      <col style="width: 14%" />
+      <col style="width: 64%" />
+      </colgroup>
+      <thead>
+      <tr>
+      <th>Sub-Tag</th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>0x01</td>
+      <td>kind</td>
+      <td>u8</td>
+      <td>Transport type: 0=nostr, 1=http_post</td>
+      </tr>
+      <tr>
+      <td>0x02</td>
+      <td>target</td>
+      <td>bytes</td>
+      <td>Transport target (interpretation depends on kind)</td>
+      </tr>
+      <tr>
+      <td>0x03</td>
+      <td>tag_tuple</td>
+      <td>sub-sub-TLV</td>
+      <td>Generic tag tuple (repeatable)</td>
+      </tr>
+      </tbody>
+      </table>
+      <h5 data-number="9.3.2.3.1"
+      id="nut-26-transport-type-mapping">Transport Type Mapping</h5>
+      <p>The kind field (sub-tag 0x01) identifies the transport method.
+      The following transport types are defined:</p>
+      <table>
+      <colgroup>
+      <col style="width: 10%" />
+      <col style="width: 14%" />
+      <col style="width: 38%" />
+      <col style="width: 37%" />
+      </colgroup>
+      <thead>
+      <tr>
+      <th>Kind Value</th>
+      <th>Transport Type</th>
+      <th>Description</th>
+      <th>Target Format</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>0x00</td>
+      <td>nostr</td>
+      <td>Nostr-based transport using NIP-04 DMs</td>
+      <td>32-byte X-only public key (raw bytes)</td>
+      </tr>
+      <tr>
+      <td>0x01</td>
+      <td>http_post</td>
+      <td>HTTP POST to specified URL</td>
+      <td>UTF-8 encoded URL string</td>
+      </tr>
+      </tbody>
+      </table>
+      <blockquote>
+      <p>[!NOTE] If no transport is specified (tag 0x07 is absent), the
+      payment is assumed to be in-band, consistent with NUT-18
+      semantics.</p>
+      </blockquote>
+      <p><strong>JSON Representation:</strong></p>
+      <p>In the NUT-18 JSON format, transports are represented with a
+      <code>type</code> field:</p>
+      <pre class="json"><code>{
+  &quot;t&quot;: [
+    { &quot;type&quot;: &quot;nostr&quot;, &quot;target&quot;: &quot;npub1...&quot;, &quot;tags&quot;: [[&quot;n&quot;, &quot;17&quot;]] },
+    { &quot;type&quot;: &quot;post&quot;, &quot;target&quot;: &quot;https://callback.example.com/pay&quot; }
+  ]
+}</code></pre>
+      <p>When encoding to TLV, the <code>type</code> string is converted
+      to the corresponding numeric kind value.</p>
+      <h5 data-number="9.3.2.3.2"
+      id="nut-26-transport-target-encoding-sub-tag-0x02">Transport
+      Target Encoding (Sub-Tag 0x02)</h5>
+      <p>The target field is interpreted based on the transport
+      kind:</p>
+      <ul>
+      <li><strong>kind=0 (nostr)</strong>: 32-byte X-only public key
+      (raw bytes, not bech32-encoded)</li>
+      <li><strong>kind=1 (http_post)</strong>: UTF-8 encoded URL
+      string</li>
+      </ul>
+      <h5 data-number="9.3.2.3.3"
+      id="nut-26-nostr-transport-details">Nostr Transport Details</h5>
+      <p>For Nostr transports (<code>kind=0</code>), the target field
+      contains the raw 32-byte X-only public key (not bech32-encoded).
+      NIPs and relay URLs are encoded using generic tag tuples (sub-tag
+      0x03), consistent with NUT-18’s tags array.</p>
+      <p><strong>Encoding (JSON to TLV):</strong></p>
+      <ol type="1">
+      <li>Parse the <code>nprofile</code> or <code>npub</code> from the
+      JSON target field using NIP-19</li>
+      <li>Store the raw 32-byte X-only public key in target (sub-tag
+      0x02)</li>
+      <li>Store any relay URLs from the nprofile as tag tuples with key
+      <code>"r"</code></li>
+      <li>Store NIPs from the tags array as tag tuples with key
+      <code>"n"</code></li>
+      </ol>
+      <p><strong>Decoding (TLV to JSON):</strong></p>
+      <ul>
+      <li>If no <code>"r"</code> tag tuples are present: encode public
+      key as <code>npub</code></li>
+      <li>If <code>"r"</code> tag tuples are present: encode as
+      <code>nprofile</code> using NIP-19 format</li>
+      </ul>
+      <h5 data-number="9.3.2.3.4"
+      id="nut-26-tag-tuple-encoding-sub-tag-0x03">Tag Tuple Encoding
+      (Sub-Tag 0x03)</h5>
+      <p>Generic tag tuples are encoded as:</p>
+      <ol type="1">
+      <li>Key length (1 byte)</li>
+      <li>Key string (UTF-8)</li>
+      <li>For each value:
+      <ul>
+      <li>Value length (1 byte)</li>
+      <li>Value string (UTF-8)</li>
+      </ul></li>
+      </ol>
+      <p>This allows encoding arbitrary key-value pairs for
+      extensibility.</p>
+      <h4 data-number="9.3.2.4"
+      id="nut-26-nut-10-sub-tlv-tag-0x08">NUT-10 Sub-TLV (Tag 0x08)</h4>
+      <p>NUT-10 spending conditions are encoded as nested TLV
+      structures:</p>
+      <table>
+      <colgroup>
+      <col style="width: 8%" />
+      <col style="width: 10%" />
+      <col style="width: 12%" />
+      <col style="width: 68%" />
+      </colgroup>
+      <thead>
+      <tr>
+      <th>Sub-Tag</th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>0x01</td>
+      <td>kind</td>
+      <td>u8</td>
+      <td>Secret kind (0=P2PK, 1=HTLC, etc.)</td>
+      </tr>
+      <tr>
+      <td>0x02</td>
+      <td>data</td>
+      <td>bytes</td>
+      <td>Kind-specific data (UTF-8 encoded)</td>
+      </tr>
+      <tr>
+      <td>0x03</td>
+      <td>tag_tuple</td>
+      <td>sub-sub-TLV</td>
+      <td>Tag tuple (repeatable, uses same encoding as transport
+      tags)</td>
+      </tr>
+      </tbody>
+      </table>
+      <h5 data-number="9.3.2.4.1"
+      id="nut-26-nut-10-kind-enumeration">NUT-10 Kind Enumeration</h5>
+      <p>The following kind values are defined for NUT-10 spending
+      conditions:</p>
+      <table>
+      <colgroup>
+      <col style="width: 12%" />
+      <col style="width: 5%" />
+      <col style="width: 82%" />
+      </colgroup>
+      <thead>
+      <tr>
+      <th>Kind Value</th>
+      <th>Name</th>
+      <th>Description</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>0x00</td>
+      <td>P2PK</td>
+      <td>Pay to Public Key - requires signature from specified public
+      key</td>
+      </tr>
+      <tr>
+      <td>0x01</td>
+      <td>HTLC</td>
+      <td>Hash Time Locked Contract - requires preimage of hash</td>
+      </tr>
+      </tbody>
+      </table>
+      <p>Additional kind values may be defined in future NUT
+      specifications. Unknown kind values SHOULD be preserved when
+      re-encoding but MAY be ignored during validation.</p>
+      <h4 data-number="9.3.2.5"
+      id="nut-26-supported-method-sub-tlv-tag-0x0a">Supported Method
+      Sub-TLV (Tag 0x0a)</h4>
+      <p>Each supported method is encoded as a nested TLV structure. The
+      tag is repeatable, one sub-TLV per method, decoding to the
+      <code>sm</code> array in JSON:</p>
+      <table>
+      <colgroup>
+      <col style="width: 8%" />
+      <col style="width: 7%" />
+      <col style="width: 7%" />
+      <col style="width: 77%" />
+      </colgroup>
+      <thead>
+      <tr>
+      <th>Sub-Tag</th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>0x01</td>
+      <td>method</td>
+      <td>string</td>
+      <td>Method name, e.g. <code>"bolt11"</code> (corresponds to
+      <code>mn</code> in JSON)</td>
+      </tr>
+      <tr>
+      <td>0x02</td>
+      <td>fee</td>
+      <td>u64</td>
+      <td>Optional per-method fee; absent = 0 (corresponds to
+      <code>mf</code> in JSON)</td>
+      </tr>
+      </tbody>
+      </table>
+      <p>When the per-method fee applies and how much the payer owes is
+      defined in <a href="nut-18.html">NUT-18</a>.</p>
+      <h3 data-number="9.3.3" id="nut-26-example">Example</h3>
+      <p>This is an example payment request expressed as JSON:</p>
+      <pre class="json"><code>{
+  &quot;i&quot;: &quot;demo123&quot;,
+  &quot;a&quot;: 1000,
+  &quot;u&quot;: &quot;sat&quot;,
+  &quot;s&quot;: true,
+  &quot;m&quot;: [&quot;https://mint.example.com&quot;],
+  &quot;d&quot;: &quot;Coffee payment&quot;
+}</code></pre>
+      <p>This payment request encodes to the NUT-26 format as:</p>
+      <pre><code>CREQB1QYQQWER9D4HNZV3NQGQQSQQQQQQQQQQRAQPSQQGQQSQQZQG9QQVXSAR5WPEN5TE0D45KUAPWV4UXZMTSD3JJUCM0D5RQQRJRDANXVET9YPCXZ7TDV4H8GXHR3TQ</code></pre>
+      <h3 data-number="9.3.4" id="nut-26-bip-321-integration">BIP-321
+      Integration</h3>
+      <p>NUT-26 payment requests can be included in <a
+      href="https://bips.dev/321/">BIP-321</a> Bitcoin URIs using the
+      <code>creq</code> query parameter. This enables unified QR codes
+      that support multiple payment methods.</p>
+      <p>The full Bech32m-encoded string (including the
+      <code>creqb1</code> prefix) is used as the parameter value.</p>
+      <blockquote>
+      <p>[!NOTE] Implementations SHOULD use uppercase for optimal QR
+      code compatibility. Decoders MUST accept both uppercase and
+      lowercase input.</p>
+      </blockquote>
+      <h4 data-number="9.3.4.1" id="nut-26-unified-qr-codes">Unified QR
+      Codes</h4>
+      <p>By including both Lightning payment data and Cashu payment
+      requests in a single BIP-321 URI, a single QR code can serve as an
+      entry point for multiple payment methods. Wallets that support a
+      given payment method can use it, while others can fall back to
+      supported methods.</p>
+      <h4 data-number="9.3.4.2" id="nut-26-examples">Examples</h4>
+      <h5 data-number="9.3.4.2.1" id="nut-26-cashu-only">Cashu Only</h5>
+      <p>A Bitcoin URI containing only a Cashu payment request:</p>
+      <pre><code>bitcoin:?creq=CREQB1QYQQWER9D4HNZV3NQGQQSQQQQQQQQQQRAQPSQQGQQSQQZQG9QQVXSAR5WPEN5TE0D45KUAPWV4UXZMTSD3JJUCM0D5RQQRJRDANXVET9YPCXZ7TDV4H8GXHR3TQ</code></pre>
+      <h5 data-number="9.3.4.2.2" id="nut-26-bolt11-cashu">BOLT11 +
+      Cashu</h5>
+      <p>A unified QR code supporting both Lightning (BOLT11) and
+      Cashu:</p>
+      <pre><code>bitcoin:?lightning=lnbc210n1p56amv8sp5v5gvxh0swyje66pcxtqtqh3qmzxd74fkxhjmzgzw7nff9fuhcdgqpp566zkpvgxn832cg06ghlk48tqntffkp6nsemw8g836pjfw4tdhdmsdqgde6hgv3kxqyjw5qcqpjrzjqwryaup9lh50kkranzgcdnn2fgvx390wgj5jd07rwr3vxeje0glc7rf05uqqg8gqqqqqqqlgqqqqrucqjq9qxpqysgqrdvjgsemgtxs3wa38xf8qs3awqf5ksw0d3mpm07t9yl7xkasyzgz8rw5qlas6r4ers68u7nmgvqsgar4t9lr47fwlaue302nrasdekgqnvfjmp&amp;creq=CREQB1QYQQWER9D4HNZV3NQGQQSQQQQQQQQQQRAQPSQQGQQSQQZQG9QQVXSAR5WPEN5TE0D45KUAPWV4UXZMTSD3JJUCM0D5RQQRJRDANXVET9YPCXZ7TDV4H8GXHR3TQ</code></pre>
+      <h5 data-number="9.3.4.2.3" id="nut-26-bolt12-cashu">BOLT12 +
+      Cashu</h5>
+      <p>A unified QR code supporting both LightningOffers (BOLT12) and
+      Cashu:</p>
+      <pre><code>bitcoin:?lno=lno1pgzkcctzv4kpvggzu2th0tw73fx2ygyd7gyuul490zkhkmz75ncz6q9nkyp9m78932tq&amp;creq=CREQB1QYQQWER9D4HNZV3NQGQQSQQQQQQQQQQRAQPSQQGQQSQQZQG9QQVXSAR5WPEN5TE0D45KUAPWV4UXZMTSD3JJUCM0D5RQQRJRDANXVET9YPCXZ7TDV4H8GXHR3TQ</code></pre>
+      <nav class="pager pager-bottom" aria-label="Nearby sections">
+        <a class="pager-prev" href="nut-18.html" rel="prev">NUT-18: Payment Requests</a>
+        <a class="pager-next" href="realtime-and-authentication.html" rel="next">Realtime and authentication</a>
+      </nav>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var btn = document.getElementById("toc-toggle");
+      var toc = document.getElementById("TOC");
+      var page = (location.pathname.split("/").pop() || "index.html");
+      if (toc) {
+        toc.querySelectorAll("a").forEach(function (a) {
+          var href = a.getAttribute("href") || "";
+          if (href.split("#")[0] === page) a.classList.add("current");
+        });
+        var current = toc.querySelector("a.current");
+        if (current) current.scrollIntoView({ block: "center" });
+      }
+      document.querySelectorAll(".main h1[id], .main h2[id], .main h3[id], .main h4[id], .main h5[id], .main h6[id]").forEach(function (h) {
+        if (h.querySelector(".header-anchor")) return;
+        var a = document.createElement("a");
+        a.className = "header-anchor";
+        a.href = "#" + h.id;
+        a.setAttribute("aria-label", "Link to this heading");
+        a.textContent = "\u00B6";
+        h.appendChild(a);
+      });
+      if (!btn) return;
+      btn.addEventListener("click", function () {
+        var open = document.body.classList.toggle("toc-open");
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+      toc && toc.addEventListener("click", function (e) {
+        if (e.target.closest("a") && window.matchMedia("(max-width: 879px)").matches) {
+          document.body.classList.remove("toc-open");
+          btn.setAttribute("aria-expanded", "false");
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

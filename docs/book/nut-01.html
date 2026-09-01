@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="compiled by Adam Shannon" />
+  <meta name="keywords" content="cashu, nuts, ecash, bitcoin, lightning, chaumian" />
+  <title>NUT-01: Mint public key exchange · Cashu Book of NUTs</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../web.css" />
+</head>
+<body class="book">
+  <header class="site">
+    <a class="brand" href="../">Cashu Book of NUTs</a>
+    <button type="button" id="toc-toggle" aria-controls="TOC" aria-expanded="false">Contents</button>
+    <nav class="site-links">
+      <a href="index.html">Contents</a>
+      <a href="https://github.com/adamdecaf/cashu-nuts-book/raw/master/cashu-book.epub">ePUB</a>
+      <a href="https://github.com/adamdecaf/cashu-nuts-book/raw/master/cashu-book.pdf">PDF</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" role="doc-toc">
+      <h2 id="toc-title">Contents</h2>
+      <ul>
+      <li><a href="introduction.html#introduction"
+      id="toc-introduction">Introduction</a></li>
+      <li><a href="how-to-read-this-book.html#how-to-read-this-book"
+      id="toc-how-to-read-this-book">How to read this book</a></li>
+      <li><a href="source-snapshot.html#source-snapshot"
+      id="toc-source-snapshot">Source snapshot</a></li>
+      <li><a href="core-protocol.html#core-protocol"
+      id="toc-core-protocol">Core protocol</a>
+      <ul>
+      <li><a href="nut-00.html#nut-00" id="toc-nut-00">NUT-00: Notation,
+      Utilization, and Terminology</a></li>
+      <li><a href="nut-01.html#nut-01" id="toc-nut-01">NUT-01: Mint public key
+      exchange</a></li>
+      <li><a href="nut-02.html#nut-02" id="toc-nut-02">NUT-02: Keysets and
+      fees</a></li>
+      <li><a href="nut-06.html#nut-06" id="toc-nut-06">NUT-06: Mint
+      information</a></li>
+      </ul></li>
+      <li><a
+      href="minting-melting-and-swapping.html#minting-melting-and-swapping"
+      id="toc-minting-melting-and-swapping">Minting, melting, and swapping</a>
+      <ul>
+      <li><a href="nut-03.html#nut-03" id="toc-nut-03">NUT-03: Swap
+      tokens</a></li>
+      <li><a href="nut-04.html#nut-04" id="toc-nut-04">NUT-04: Mint
+      tokens</a></li>
+      <li><a href="nut-05.html#nut-05" id="toc-nut-05">NUT-05: Melting
+      tokens</a></li>
+      <li><a href="nut-08.html#nut-08" id="toc-nut-08">NUT-08: Lightning fee
+      return</a></li>
+      <li><a href="nut-15.html#nut-15" id="toc-nut-15">NUT-15: Partial
+      multi-path payments</a></li>
+      <li><a href="nut-20.html#nut-20" id="toc-nut-20">NUT-20: Signature on
+      Mint Quote</a></li>
+      <li><a href="nut-29.html#nut-29" id="toc-nut-29">NUT-29: Batched
+      Minting</a></li>
+      </ul></li>
+      <li><a
+      href="proofs-restore-and-wallet-state.html#proofs-restore-and-wallet-state"
+      id="toc-proofs-restore-and-wallet-state">Proofs, restore, and wallet
+      state</a>
+      <ul>
+      <li><a href="nut-07.html#nut-07" id="toc-nut-07">NUT-07: Token state
+      check</a></li>
+      <li><a href="nut-09.html#nut-09" id="toc-nut-09">NUT-09: Restore
+      signatures</a></li>
+      <li><a href="nut-12.html#nut-12" id="toc-nut-12">NUT-12: Offline ecash
+      signature validation</a></li>
+      <li><a href="nut-13.html#nut-13" id="toc-nut-13">NUT-13: Deterministic
+      Secrets</a></li>
+      <li><a href="nut-19.html#nut-19" id="toc-nut-19">NUT-19: Cached
+      Responses</a></li>
+      </ul></li>
+      <li><a href="spending-conditions.html#spending-conditions"
+      id="toc-spending-conditions">Spending conditions</a>
+      <ul>
+      <li><a href="nut-10.html#nut-10" id="toc-nut-10">NUT-10: Spending
+      conditions</a></li>
+      <li><a href="nut-11.html#nut-11" id="toc-nut-11">NUT-11: Pay to Public
+      Key (P2PK)</a></li>
+      <li><a href="nut-14.html#nut-14" id="toc-nut-14">NUT-14: Hashed Timelock
+      Contracts (HTLCs)</a></li>
+      <li><a href="nut-28.html#nut-28" id="toc-nut-28">NUT-28:
+      Pay-to-Blinded-Key (P2BK)</a></li>
+      </ul></li>
+      <li><a
+      href="lightning-and-other-payment-methods.html#lightning-and-other-payment-methods"
+      id="toc-lightning-and-other-payment-methods">Lightning and other payment
+      methods</a>
+      <ul>
+      <li><a href="nut-23.html#nut-23" id="toc-nut-23">NUT-23: BOLT11</a></li>
+      <li><a href="nut-25.html#nut-25" id="toc-nut-25">NUT-25: BOLT12</a></li>
+      <li><a href="nut-24.html#nut-24" id="toc-nut-24">NUT-24: HTTP 402
+      Payment Required</a></li>
+      <li><a href="nut-30.html#nut-30" id="toc-nut-30">NUT-30: Payment Method:
+      Onchain</a></li>
+      </ul></li>
+      <li><a
+      href="requests-and-user-experience.html#requests-and-user-experience"
+      id="toc-requests-and-user-experience">Requests and user experience</a>
+      <ul>
+      <li><a href="nut-16.html#nut-16" id="toc-nut-16">NUT-16: Animated QR
+      codes</a></li>
+      <li><a href="nut-18.html#nut-18" id="toc-nut-18">NUT-18: Payment
+      Requests</a></li>
+      <li><a href="nut-26.html#nut-26" id="toc-nut-26">NUT-26: Payment Request
+      Bech32m Encoding</a></li>
+      </ul></li>
+      <li><a
+      href="realtime-and-authentication.html#realtime-and-authentication"
+      id="toc-realtime-and-authentication">Realtime and authentication</a>
+      <ul>
+      <li><a href="nut-17.html#nut-17" id="toc-nut-17">NUT-17:
+      WebSockets</a></li>
+      <li><a href="nut-21.html#nut-21" id="toc-nut-21">NUT-21: Clear
+      Authentication</a></li>
+      <li><a href="nut-22.html#nut-22" id="toc-nut-22">NUT-22: Blind
+      Authentication</a></li>
+      </ul></li>
+      <li><a href="nostr-integration.html#nostr-integration"
+      id="toc-nostr-integration">Nostr integration</a>
+      <ul>
+      <li><a href="nut-27.html#nut-27" id="toc-nut-27">NUT-27: Nostr Mint
+      Backup</a></li>
+      </ul></li>
+      <li><a href="conclusion.html#conclusion"
+      id="toc-conclusion">Conclusion</a></li>
+      </ul>
+    </nav>
+    <div class="main">
+      <nav class="pager" aria-label="Nearby sections">
+        <a class="pager-prev" href="nut-00.html" accesskey="p" rel="prev">NUT-00: Notation, Utilization, and Terminology</a>
+        <a class="pager-next" href="nut-02.html" accesskey="n" rel="next">NUT-02: Keysets and fees</a>
+      </nav>
+      <h2 data-number="4.2" id="nut-01">NUT-01: Mint public key
+      exchange</h2>
+      <p><code>mandatory</code></p>
+      <hr />
+      <p>This document outlines the exchange of the public keys of the
+      mint <code>Bob</code> with the wallet user <code>Alice</code>.
+      <code>Alice</code> uses the keys to unblind <code>Bob</code>’s
+      blind signatures (see <a href="nut-00.html">NUT-00</a>).</p>
+      <h3 data-number="4.2.1" id="nut-01-description">Description</h3>
+      <p>Wallet user <code>Alice</code> receives public keys from mint
+      <code>Bob</code> via <code>GET /v1/keys</code>. The set of all
+      public keys for a set of amounts is called a <em>keyset</em>.</p>
+      <p>The mint responds only with its <code>active</code> keysets.
+      Keysets are <code>active</code> if the mint will sign outputs with
+      it. The mint will accept tokens from inactive keysets as inputs
+      but will not sign with them for new outputs. The
+      <code>active</code> keysets can change over time, for example due
+      to key rotation. A list of all keysets, active and inactive, can
+      be requested separately (see <a
+      href="nut-02.html">NUT-02</a>).</p>
+      <p>Note that a mint can support multiple keysets at the same time
+      but will only respond with the active keysets on the endpoint
+      <code>GET /v1/keys</code>. A wallet can ask for the keys of a
+      specific (active or inactive) keyset via the endpoint
+      <code>GET /v1/keys/{keyset_id}</code> (see <a
+      href="nut-02.html">NUT-02</a>).</p>
+      <h3 data-number="4.2.2"
+      id="nut-01-supported-currency-units">Supported Currency Units</h3>
+      <p>A mint may support any currency unit(s) they can mint (<a
+      href="nut-04.html">NUT-04</a>) and melt(<a
+      href="nut-05.html">NUT-05</a>), either directly or indirectly,
+      including:</p>
+      <ul>
+      <li><code>btc</code>: Bitcoin (Minor Unit: 8) - though use of the
+      <code>sat</code> unit is generally preferred</li>
+      <li><code>sat</code>: Bitcoin’s Minor Unit (ie:
+      <code>100,000,000 sat = 1 bitcoin</code>)</li>
+      <li><code>msat</code>: defined as 1/1000th of a <code>sat</code>
+      (ie: <code>1,000 msat = 1 sat</code>)</li>
+      <li><code>auth</code>: reserved for Blind Authentication (see <a
+      href="nut-22.html">NUT-22</a>).</li>
+      <li><a href="https://www.iso.org/iso-4217-currency-codes.html">ISO
+      4217</a> currency codes (eg: <code>usd</code>, <code>eur</code>,
+      <code>gbp</code>)</li>
+      <li>Stablecoin currency codes (eg: <code>usdt</code>,
+      <code>usdc</code>, <code>eurc</code>, <code>gyen</code>)</li>
+      </ul>
+      <blockquote>
+      <p>[!IMPORTANT] For Bitcoin, ISO 4217 currencies (and stablecoins
+      pegged to those currencies), Keyset amount values
+      <strong>MUST</strong> represent an amount in the Minor Unit of
+      that currency. Where the Minor Unit of a currency is
+      “<code>0</code>”, amounts represent whole units. For example:</p>
+      <ul>
+      <li><code>usd</code> (Minor Unit: 2)
+      <code>&lt;amount_1&gt; = 1 cent (0.01 USD)</code></li>
+      <li><code>jpy</code> (Minor Unit: 0)
+      <code>&lt;amount_1&gt; = 1 JPY</code></li>
+      <li><code>bhd</code> (Minor Unit: 3)
+      <code>&lt;amount_1&gt; = 1 fils (0.001 BHD)</code></li>
+      <li><code>btc</code> (Minor Unit: 8)
+      <code>&lt;amount_1&gt; = 1 sat (0.00000001 BTC)</code></li>
+      <li><code>eurc</code> (Pegged to EUR, so Minor Unit: 2)
+      <code>&lt;amount_1&gt; = 1 cent (0.01 EURC)</code></li>
+      <li><code>gyen</code> (Pegged to JPY, so Minor Unit: 0)
+      <code>&lt;amount_1&gt; = 1 GYEN</code></li>
+      </ul>
+      </blockquote>
+      <h3 data-number="4.2.3" id="nut-01-keyset-generation">Keyset
+      generation</h3>
+      <p>Keysets are generated by the mint. The mint is free to use any
+      key generation method they like. Each keyset is identified by its
+      keyset <code>id</code> which can be computed by anyone from its
+      public keys (see <a href="nut-02.html">NUT-02</a>).</p>
+      <p>Keys in Keysets are maps of the form
+      <code>{&lt;amount_1&gt; : &lt;mint_pubkey_1&gt;, &lt;amount_2&gt; : &lt;mint_pubkey_2&gt;, ...}</code>
+      for each <code>&lt;amount_i&gt;</code> of the amounts the mint
+      <code>Bob</code> supports and the corresponding public key
+      <code>&lt;mint_pubkey_1&gt;</code>, that is <code>K_i</code> (see
+      <a href="nut-00.html">NUT-00</a>). The mint <strong>MUST</strong>
+      use the <a
+      href="https://learnmeabitcoin.com/technical/public-key#public-key-format">compressed
+      Secp256k1 public key format</a> to represent its public keys.</p>
+      <h3 data-number="4.2.4" id="nut-01-example">Example</h3>
+      <p>Request of <code>Alice</code>:</p>
+      <pre class="http"><code>GET https://mint.host:3338/v1/keys</code></pre>
+      <p>With curl:</p>
+      <pre class="bash"><code>curl -X GET https://mint.host:3338/v1/keys</code></pre>
+      <p>Response <code>GetKeysResponse</code> of <code>Bob</code>:</p>
+      <pre class="json"><code>{
+  &quot;keysets&quot;: [
+    {
+      &quot;id&quot;: &lt;keyset_id_hex_str&gt;,
+      &quot;unit&quot;: &lt;currency_unit_str&gt;,
+      &quot;active&quot;: &lt;bool&gt;,
+      &quot;input_fee_ppk&quot;: &lt;int|null&gt;,
+      &quot;final_expiry&quot;: &lt;unix_timestamp_int|null&gt;
+      &quot;keys&quot;: {
+        &lt;amount_int&gt;: &lt;public_key_str&gt;,
+        ...
+      }
+    }
+  ]
+}</code></pre>
+      <p>Here, <code>active</code> indicates whether the mint will sign
+      new outputs with this keyset, and <code>input_fee_ppk</code> is
+      the fee in parts per thousand (ppk) per input spent from this
+      keyset (see <a href="nut-02.html">NUT-02</a>).</p>
+      <h3 data-number="4.2.5" id="nut-01-example-response">Example
+      response</h3>
+      <pre class="json"><code>{
+  &quot;keysets&quot;: [
+    {
+      &quot;id&quot;: &quot;009a1f293253e41e&quot;,
+      &quot;unit&quot;: &quot;sat&quot;,
+      &quot;active&quot;: true,
+      &quot;input_fee_ppk&quot;: 100,
+      &quot;final_expiry&quot;: 1896187313,
+      &quot;keys&quot;: {
+          &quot;1&quot;: &quot;02194603ffa36356f4a56b7df9371fc3192472351453ec7398b8da8117e7c3e104&quot;,
+          &quot;2&quot;: &quot;03b0f36d6d47ce14df8a7be9137712c42bcdd960b19dd02f1d4a9703b1f31d7513&quot;,
+          &quot;4&quot;: &quot;0366be6e026e42852498efb82014ca91e89da2e7a5bd3761bdad699fa2aec9fe09&quot;,
+          &quot;8&quot;: &quot;0253de5237f189606f29d8a690ea719f74d65f617bb1cb6fbea34f2bc4f930016d&quot;,
+          ...
+      }
+    }
+  ]
+}</code></pre>
+      <p>Note that for a keyset in an ISO 4217 currency, the key amounts
+      represent values in the Minor Unit of that currency (keys
+      truncated and comments added for clarity):</p>
+      <pre class="json"><code>{
+  &quot;keysets&quot;: [
+    {
+      &quot;id&quot;: &quot;00a2f293253e41f9&quot;,
+      &quot;unit&quot;: &quot;usd&quot;,
+      &quot;active&quot;: true,
+      &quot;input_fee_ppk&quot;: 100,
+      &quot;final_expiry&quot;: 1896187313,
+      &quot;keys&quot;: {
+          &quot;1&quot;: &quot;0229...e101&quot;, // 1 cent (0.01 USD)
+          &quot;2&quot;: &quot;03c0...7512&quot;, // 2 cents (0.02 USD)
+          &quot;4&quot;: &quot;0376...fe00&quot;, // 4 cents (0.04 USD)
+          &quot;8&quot;: &quot;0263...016e&quot;, // 8 cents (0.08 USD)
+          ...
+      }
+    }
+  ]
+}</code></pre>
+      <nav class="pager pager-bottom" aria-label="Nearby sections">
+        <a class="pager-prev" href="nut-00.html" rel="prev">NUT-00: Notation, Utilization, and Terminology</a>
+        <a class="pager-next" href="nut-02.html" rel="next">NUT-02: Keysets and fees</a>
+      </nav>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var btn = document.getElementById("toc-toggle");
+      var toc = document.getElementById("TOC");
+      var page = (location.pathname.split("/").pop() || "index.html");
+      if (toc) {
+        toc.querySelectorAll("a").forEach(function (a) {
+          var href = a.getAttribute("href") || "";
+          if (href.split("#")[0] === page) a.classList.add("current");
+        });
+        var current = toc.querySelector("a.current");
+        if (current) current.scrollIntoView({ block: "center" });
+      }
+      document.querySelectorAll(".main h1[id], .main h2[id], .main h3[id], .main h4[id], .main h5[id], .main h6[id]").forEach(function (h) {
+        if (h.querySelector(".header-anchor")) return;
+        var a = document.createElement("a");
+        a.className = "header-anchor";
+        a.href = "#" + h.id;
+        a.setAttribute("aria-label", "Link to this heading");
+        a.textContent = "\u00B6";
+        h.appendChild(a);
+      });
+      if (!btn) return;
+      btn.addEventListener("click", function () {
+        var open = document.body.classList.toggle("toc-open");
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+      toc && toc.addEventListener("click", function (e) {
+        if (e.target.closest("a") && window.matchMedia("(max-width: 879px)").matches) {
+          document.body.classList.remove("toc-open");
+          btn.setAttribute("aria-expanded", "false");
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

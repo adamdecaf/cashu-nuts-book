@@ -1,4 +1,4 @@
-## Source snapshot
+# Source snapshot
 
 This book was built from the following commit of [cashubtc/nuts](https://github.com/cashubtc/nuts). If something here disagrees with upstream, upstream wins.
 

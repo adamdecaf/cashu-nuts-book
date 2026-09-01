@@ -4,74 +4,15 @@
     <meta charset="utf-8" />
     <title>Cashu Book of NUTs</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Cashu Notation, Usage, and Terminology, compiled into a readable book. Available as ePUB and PDF." />
-    <style>
-      :root {
-        color-scheme: light;
-        --bg: #f6f1e8;
-        --ink: #1c1916;
-        --muted: #5c564e;
-        --rule: #d7cfc2;
-        --link: #8a3b12;
-      }
-      * { box-sizing: border-box; }
-      html, body {
-        margin: 0;
-        padding: 0;
-        background: var(--bg);
-        color: var(--ink);
-        font: 18px/1.55 Georgia, "Times New Roman", serif;
-      }
-      main {
-        max-width: 36rem;
-        margin: 0 auto;
-        padding: 3.5rem 1.25rem 4rem;
-      }
-      h1 {
-        font-size: 2rem;
-        font-weight: normal;
-        letter-spacing: 0.01em;
-        margin: 0 0 0.35rem;
-      }
-      .byline {
-        color: var(--muted);
-        font-size: 0.95rem;
-        margin: 0 0 1.75rem;
-      }
-      p { margin: 0 0 1rem; }
-      .downloads {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.6rem 0.75rem;
-        margin: 1.5rem 0 2rem;
-      }
-      .downloads a {
-        display: inline-block;
-        padding: 0.45rem 0.9rem;
-        border: 1px solid var(--ink);
-        color: var(--ink);
-        text-decoration: none;
-        font-size: 0.95rem;
-      }
-      .downloads a:hover {
-        background: var(--ink);
-        color: var(--bg);
-      }
-      a { color: var(--link); }
-      footer {
-        margin-top: 2.5rem;
-        padding-top: 1rem;
-        border-top: 1px solid var(--rule);
-        color: var(--muted);
-        font-size: 0.95rem;
-      }
-      footer a { color: var(--muted); }
-    </style>
+    <meta name="description" content="Cashu Notation, Usage, and Terminology, compiled into a readable book. Read online, or download ePUB and PDF." />
+    <link rel="stylesheet" href="web.css" />
   </head>
-  <body>
+  <body class="home">
     <main>
       <h1>Cashu Book of NUTs</h1>
       <p class="byline">compiled by Adam Shannon</p>
+
+      <img class="cover" src="cover.png" alt="Cover of the Cashu Book of NUTs" width="1536" height="2048" />
 
       <p>
         The Cashu Notation, Usage, and Terminology documents, grouped by theme
@@ -83,21 +24,35 @@
         Start with the core protocol if you are new. Later chapters are optional.
       </p>
 
-      <div class="downloads">
+      <div class="actions">
+        <a class="primary" href="book/introduction.html">Read online</a>
+        <a href="book/">Full contents</a>
         <a href="https://github.com/adamdecaf/cashu-nuts-book/raw/master/cashu-book.epub">Download ePUB</a>
         <a href="https://github.com/adamdecaf/cashu-nuts-book/raw/master/cashu-book.pdf">Download PDF</a>
         <a href="https://github.com/adamdecaf/cashu-nuts-book">Source on GitHub</a>
       </div>
 
-      <p>
-        Site:
-        <a href="https://adamdecaf.github.io/cashu-nuts-book/">https://adamdecaf.github.io/cashu-nuts-book/</a>
-      </p>
+      <h2>Contents</h2>
+      <ol class="chapter-list">
+        <li><a href="book/introduction.html"><span class="n">1</span> Introduction</a></li>
+        <li><a href="book/how-to-read-this-book.html"><span class="n">2</span> How to read this book</a></li>
+        <li><a href="book/core-protocol.html"><span class="n">3</span> Core protocol</a></li>
+        <li><a href="book/minting-melting-and-swapping.html"><span class="n">4</span> Minting, melting, and swapping</a></li>
+        <li><a href="book/proofs-restore-and-wallet-state.html"><span class="n">5</span> Proofs, restore, and wallet state</a></li>
+        <li><a href="book/spending-conditions.html"><span class="n">6</span> Spending conditions</a></li>
+        <li><a href="book/lightning-and-other-payment-methods.html"><span class="n">7</span> Lightning and other payment methods</a></li>
+        <li><a href="book/requests-and-user-experience.html"><span class="n">8</span> Requests and user experience</a></li>
+        <li><a href="book/realtime-and-authentication.html"><span class="n">9</span> Realtime and authentication</a></li>
+        <li><a href="book/nostr-integration.html"><span class="n">10</span> Nostr integration</a></li>
+        <li><a href="book/conclusion.html"><span class="n">11</span> Conclusion</a></li>
+      </ol>
 
       <footer>
         <p>
           NUT changes belong upstream at
           <a href="https://github.com/cashubtc/nuts">cashubtc/nuts</a>.
+          Further discussion of this book belongs on the
+          <a href="https://github.com/adamdecaf/cashu-nuts-book">cashu-nuts-book repository</a>.
         </p>
       </footer>
     </main>

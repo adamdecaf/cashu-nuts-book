@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="compiled by Adam Shannon" />
+  <meta name="keywords" content="cashu, nuts, ecash, bitcoin, lightning, chaumian" />
+  <title>NUT-12: Offline ecash signature validation · Cashu Book of
+NUTs</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../web.css" />
+</head>
+<body class="book">
+  <header class="site">
+    <a class="brand" href="../">Cashu Book of NUTs</a>
+    <button type="button" id="toc-toggle" aria-controls="TOC" aria-expanded="false">Contents</button>
+    <nav class="site-links">
+      <a href="index.html">Contents</a>
+      <a href="https://github.com/adamdecaf/cashu-nuts-book/raw/master/cashu-book.epub">ePUB</a>
+      <a href="https://github.com/adamdecaf/cashu-nuts-book/raw/master/cashu-book.pdf">PDF</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" role="doc-toc">
+      <h2 id="toc-title">Contents</h2>
+      <ul>
+      <li><a href="introduction.html#introduction"
+      id="toc-introduction">Introduction</a></li>
+      <li><a href="how-to-read-this-book.html#how-to-read-this-book"
+      id="toc-how-to-read-this-book">How to read this book</a></li>
+      <li><a href="source-snapshot.html#source-snapshot"
+      id="toc-source-snapshot">Source snapshot</a></li>
+      <li><a href="core-protocol.html#core-protocol"
+      id="toc-core-protocol">Core protocol</a>
+      <ul>
+      <li><a href="nut-00.html#nut-00" id="toc-nut-00">NUT-00: Notation,
+      Utilization, and Terminology</a></li>
+      <li><a href="nut-01.html#nut-01" id="toc-nut-01">NUT-01: Mint public key
+      exchange</a></li>
+      <li><a href="nut-02.html#nut-02" id="toc-nut-02">NUT-02: Keysets and
+      fees</a></li>
+      <li><a href="nut-06.html#nut-06" id="toc-nut-06">NUT-06: Mint
+      information</a></li>
+      </ul></li>
+      <li><a
+      href="minting-melting-and-swapping.html#minting-melting-and-swapping"
+      id="toc-minting-melting-and-swapping">Minting, melting, and swapping</a>
+      <ul>
+      <li><a href="nut-03.html#nut-03" id="toc-nut-03">NUT-03: Swap
+      tokens</a></li>
+      <li><a href="nut-04.html#nut-04" id="toc-nut-04">NUT-04: Mint
+      tokens</a></li>
+      <li><a href="nut-05.html#nut-05" id="toc-nut-05">NUT-05: Melting
+      tokens</a></li>
+      <li><a href="nut-08.html#nut-08" id="toc-nut-08">NUT-08: Lightning fee
+      return</a></li>
+      <li><a href="nut-15.html#nut-15" id="toc-nut-15">NUT-15: Partial
+      multi-path payments</a></li>
+      <li><a href="nut-20.html#nut-20" id="toc-nut-20">NUT-20: Signature on
+      Mint Quote</a></li>
+      <li><a href="nut-29.html#nut-29" id="toc-nut-29">NUT-29: Batched
+      Minting</a></li>
+      </ul></li>
+      <li><a
+      href="proofs-restore-and-wallet-state.html#proofs-restore-and-wallet-state"
+      id="toc-proofs-restore-and-wallet-state">Proofs, restore, and wallet
+      state</a>
+      <ul>
+      <li><a href="nut-07.html#nut-07" id="toc-nut-07">NUT-07: Token state
+      check</a></li>
+      <li><a href="nut-09.html#nut-09" id="toc-nut-09">NUT-09: Restore
+      signatures</a></li>
+      <li><a href="nut-12.html#nut-12" id="toc-nut-12">NUT-12: Offline ecash
+      signature validation</a></li>
+      <li><a href="nut-13.html#nut-13" id="toc-nut-13">NUT-13: Deterministic
+      Secrets</a></li>
+      <li><a href="nut-19.html#nut-19" id="toc-nut-19">NUT-19: Cached
+      Responses</a></li>
+      </ul></li>
+      <li><a href="spending-conditions.html#spending-conditions"
+      id="toc-spending-conditions">Spending conditions</a>
+      <ul>
+      <li><a href="nut-10.html#nut-10" id="toc-nut-10">NUT-10: Spending
+      conditions</a></li>
+      <li><a href="nut-11.html#nut-11" id="toc-nut-11">NUT-11: Pay to Public
+      Key (P2PK)</a></li>
+      <li><a href="nut-14.html#nut-14" id="toc-nut-14">NUT-14: Hashed Timelock
+      Contracts (HTLCs)</a></li>
+      <li><a href="nut-28.html#nut-28" id="toc-nut-28">NUT-28:
+      Pay-to-Blinded-Key (P2BK)</a></li>
+      </ul></li>
+      <li><a
+      href="lightning-and-other-payment-methods.html#lightning-and-other-payment-methods"
+      id="toc-lightning-and-other-payment-methods">Lightning and other payment
+      methods</a>
+      <ul>
+      <li><a href="nut-23.html#nut-23" id="toc-nut-23">NUT-23: BOLT11</a></li>
+      <li><a href="nut-25.html#nut-25" id="toc-nut-25">NUT-25: BOLT12</a></li>
+      <li><a href="nut-24.html#nut-24" id="toc-nut-24">NUT-24: HTTP 402
+      Payment Required</a></li>
+      <li><a href="nut-30.html#nut-30" id="toc-nut-30">NUT-30: Payment Method:
+      Onchain</a></li>
+      </ul></li>
+      <li><a
+      href="requests-and-user-experience.html#requests-and-user-experience"
+      id="toc-requests-and-user-experience">Requests and user experience</a>
+      <ul>
+      <li><a href="nut-16.html#nut-16" id="toc-nut-16">NUT-16: Animated QR
+      codes</a></li>
+      <li><a href="nut-18.html#nut-18" id="toc-nut-18">NUT-18: Payment
+      Requests</a></li>
+      <li><a href="nut-26.html#nut-26" id="toc-nut-26">NUT-26: Payment Request
+      Bech32m Encoding</a></li>
+      </ul></li>
+      <li><a
+      href="realtime-and-authentication.html#realtime-and-authentication"
+      id="toc-realtime-and-authentication">Realtime and authentication</a>
+      <ul>
+      <li><a href="nut-17.html#nut-17" id="toc-nut-17">NUT-17:
+      WebSockets</a></li>
+      <li><a href="nut-21.html#nut-21" id="toc-nut-21">NUT-21: Clear
+      Authentication</a></li>
+      <li><a href="nut-22.html#nut-22" id="toc-nut-22">NUT-22: Blind
+      Authentication</a></li>
+      </ul></li>
+      <li><a href="nostr-integration.html#nostr-integration"
+      id="toc-nostr-integration">Nostr integration</a>
+      <ul>
+      <li><a href="nut-27.html#nut-27" id="toc-nut-27">NUT-27: Nostr Mint
+      Backup</a></li>
+      </ul></li>
+      <li><a href="conclusion.html#conclusion"
+      id="toc-conclusion">Conclusion</a></li>
+      </ul>
+    </nav>
+    <div class="main">
+      <nav class="pager" aria-label="Nearby sections">
+        <a class="pager-prev" href="nut-09.html" accesskey="p" rel="prev">NUT-09: Restore signatures</a>
+        <a class="pager-next" href="nut-13.html" accesskey="n" rel="next">NUT-13: Deterministic Secrets</a>
+      </nav>
+      <h2 data-number="6.3" id="nut-12">NUT-12: Offline ecash signature
+      validation</h2>
+      <p><code>optional</code></p>
+      <hr />
+      <p>In this document, we present an extension of Cashu’s crypto
+      system to allow a user <code>Alice</code> to verify the mint
+      <code>Bob</code>’s signature using only <code>Bob</code>’s public
+      keys. We explain how another user <code>Carol</code> who receives
+      ecash from <code>Alice</code> can execute the DLEQ proof as well.
+      This is achieved using a Discrete Log Equality (DLEQ) proof.
+      Previously, <code>Bob</code>’s signature could only be checked by
+      himself using his own private keys (<a
+      href="nut-00.html">NUT-00</a>).</p>
+      <h3 data-number="6.3.1" id="nut-12-the-dleq-proof">The DLEQ
+      proof</h3>
+      <p>The purpose of this DLEQ is to prove that the mint has used the
+      same private key <code>a</code> for creating its public key
+      <code>A</code> (<a href="nut-01.html">NUT-01</a>) and for signing
+      the BlindedMessage <code>B'</code>. <code>Bob</code> returns the
+      DLEQ proof additional to the blind signature <code>C'</code> for a
+      mint or swap operation.</p>
+      <p>The complete DLEQ proof reads</p>
+      <pre><code># DLEQ Proof
+
+(These steps occur when Bob returns C&#39;)
+
+Bob:
+r = HMAC-SHA256(key=a, data=&quot;Cashu_DLEQ_R_v1&quot; || A || B&#39; || C&#39; || ctr) # Deterministic nonce
+R1 = r*G
+R2 = r*B&#39;
+e = hash(R1,R2,A,C&#39;)
+s = (r + e*a) mod n
+return e, s
+
+Alice:
+R1 = s*G - e*A
+R2 = s*B&#39; - e*C&#39;
+e == hash(R1,R2,A,C&#39;)
+
+If true, a in A = a*G must be equal to a in C&#39; = a*B&#39;
+
+where:
+  G, n = secp256k1 generator point, and curve order
+  a = mint&#39;s amount-i private key, as 32-byte big-endian (HMAC key)
+  A, B&#39;, C&#39; = uncompressed (65 byte) SEC1 public points as raw bytes
+  ctr = nonce counter byte; set to 0x00 initially, increment and retry if r == 0 or r &gt;= n (max 256 tries)</code></pre>
+      <blockquote>
+      <p>[!CAUTION]</p>
+      <p>Mints <strong>SHOULD</strong> use a rejection-sampled
+      deterministic nonce (<code>r</code>) to avoid RNG failures. See
+      the <a href="tests/12-tests.md">test vectors</a>.</p>
+      <p>Reusing a nonce across different challenges leaks the private
+      key immediately (<code>a = (s₁ - s₂) · (e₁ - e₂)⁻¹ mod n</code>).
+      Mints that use random nonces <strong>MUST</strong> source them
+      from a cryptographically secure RNG.</p>
+      </blockquote>
+      <h4 data-number="6.3.1.1" id="nut-12-hash-function">Hash
+      function</h4>
+      <p>The hash function
+      <code>hash(x: &lt;Array&lt;[PublicKey]&gt;) -&gt; bytes</code>
+      generates a deterministic SHA256 hash for a given input list of
+      <code>PublicKey</code>. The uncompressed (32+32+1)-byte
+      hexadecimal representations (130 characters) of each
+      <code>PublicKey</code> is concatenated before taking the SHA256
+      hash.</p>
+      <pre class="python"><code>def hash_e(*publickeys: PublicKey) -&gt; bytes:
+    e_ = &quot;&quot;
+    for p in publickeys:
+        _p = p.serialize(compressed=False).hex()
+        e_ += str(_p)
+    e = hashlib.sha256(e_.encode(&quot;utf-8&quot;)).digest()
+    return e
+</code></pre>
+      <blockquote>
+      <p>[!NOTE] For examples of valid DLEQ proofs, see the <a
+      href="tests/12-tests.md">test vectors</a>.</p>
+      </blockquote>
+      <h4 data-number="6.3.1.2"
+      id="nut-12-mint-to-user-dleq-in-blindsignature">Mint to user: DLEQ
+      in <code>BlindSignature</code></h4>
+      <p>The mint produces these DLEQ proofs when returning
+      <code>BlindSignature</code>’s in the responses for minting (<a
+      href="nut-04.html">NUT-04</a>) and swapping (<a
+      href="nut-03.html">NUT-03</a>) tokens. The
+      <code>BlindSignature</code> object is extended in the following
+      way to include the DLEQ proof:</p>
+      <pre class="json"><code>{
+  &quot;id&quot;: &lt;str&gt;,
+  &quot;amount&quot;: &lt;int&gt;,
+  &quot;C_&quot;: &lt;str&gt;,
+  &quot;dleq&quot;: { &lt;-- New: DLEQ proof
+    &quot;e&quot;: &lt;str&gt;,
+    &quot;s&quot;: &lt;str&gt;
+  }
+}
+</code></pre>
+      <p><code>e</code> and <code>s</code> are the DLEQ proof.</p>
+      <h4 data-number="6.3.1.3"
+      id="nut-12-user-to-user-dleq-in-proof">User to user: DLEQ in
+      <code>Proof</code></h4>
+      <p>In order for <code>Alice</code> to communicate the DLEQ to
+      another user <code>Carol</code>, we extend the <code>Proof</code>
+      (see <a href="nut-00.html">NUT-00</a>) object and include the DLEQ
+      proof. As explained below, we also need to include the blinding
+      factor <code>r</code> for the proof to be convincing to another
+      user <code>Carol</code>.</p>
+      <pre class="json"><code>{
+  &quot;id&quot;: &lt;str&gt;,
+  &quot;amount&quot;: &lt;int&gt;,
+  &quot;secret&quot;: &lt;str&gt;,
+  &quot;C&quot;: &lt;str&gt;,
+  &quot;dleq&quot;: { &lt;-- New: DLEQ proof
+    &quot;e&quot;: &lt;str&gt;,
+    &quot;s&quot;: &lt;str&gt;,
+    &quot;r&quot;: &lt;str&gt;
+  }
+}</code></pre>
+      <p><code>e</code> and <code>s</code> are the challenge and
+      response of the DLEQ proof returned by <code>Bob</code>,
+      <code>r</code> is the blinding factor of <code>Alice</code> that
+      was used to generate the <code>Proof</code>. <code>Alice</code>
+      serializes these proofs like any other in a token (see <a
+      href="nut-00.html">NUT-00</a>) to send it to another user
+      <code>Carol</code>.</p>
+      <blockquote>
+      <p>[!IMPORTANT]</p>
+      <p><strong>Privacy:</strong> The blinding factor <code>r</code>
+      should not be shared with the mint or otherwise, the mint will be
+      able to associate the <code>BlindSignature</code> with the
+      <code>Proof</code>.</p>
+      </blockquote>
+      <h3 data-number="6.3.2"
+      id="nut-12-alice-minting-user-verifies-dleq-proof">Alice (minting
+      user) verifies DLEQ proof</h3>
+      <p>When minting or swapping tokens, <code>Alice</code> receives
+      DLEQ proofs in the <code>BlindSignature</code> response from the
+      mint <code>Bob</code>. <code>Alice</code> checks the validity of
+      the DLEQ proofs for each ecash token she receives via the
+      equations:</p>
+      <pre><code>R1 = s*G - e*A
+R2 = s*B&#39; - e*C&#39;
+e == hash(R1,R2,A,C&#39;) # must be True</code></pre>
+      <p>Here, the variables are</p>
+      <ul>
+      <li><code>A</code> – the public key <code>Bob</code> used to sign
+      this Proof</li>
+      <li><code>(e, s)</code> – the DLEQ proof returned by
+      <code>Bob</code></li>
+      <li><code>B'</code> – <code>Alice</code>’s
+      <code>BlindedMessage</code></li>
+      <li><code>C'</code> – <code>Bob</code>’s
+      <code>BlindSignature</code> on <code>B'</code></li>
+      </ul>
+      <p>In order to execute the proof, <code>Alice</code> needs
+      <code>e, s</code> that are returned in the
+      <code>BlindSignature</code> by <code>Bob</code>.
+      <code>Alice</code> further needs <code>B'</code> (the
+      <code>BlindedMessage</code> <code>Alice</code> created and
+      <code>Bob</code> signed) and <code>C'</code> (the blind signature
+      in the <code>BlindSignature</code> response) from
+      <code>Bob</code>, and <code>A</code> (the public key of
+      <code>Bob</code> with which he signed the BlindedMessage). All
+      these values are available to <code>Alice</code> during or after
+      calling the mint and swap operations.</p>
+      <p>If a DLEQ proof is included in the mint’s
+      <code>BlindSignature</code> response, wallets
+      <strong>MUST</strong> verify the DLEQ proof.</p>
+      <h3 data-number="6.3.3"
+      id="nut-12-carol-another-user-verifies-dleq-proof">Carol (another
+      user) verifies DLEQ proof</h3>
+      <p><code>Carol</code> is a user that receives <code>Proofs</code>
+      in a token from another user Alice. When <code>Alice</code> sends
+      <code>Proofs</code> with DLEQ proofs to <code>Carol</code> or when
+      <code>Alice</code> posts the <code>Proofs</code> publicly,
+      <code>Carol</code> can validate the DLEQ proof herself and verify
+      <code>Bob</code>’s signature without having to talk to
+      <code>Bob</code>. <code>Alice</code> includes the following
+      information in the <code>Proof</code> (see above):</p>
+      <ul>
+      <li><code>(x, C)</code> – the ecash <code>Proof</code></li>
+      <li><code>(e, s)</code> – the DLEQ proof revealed by
+      <code>Alice</code></li>
+      <li><code>r</code> – <code>Alice</code>’s blinding factor</li>
+      </ul>
+      <p>Here, <code>x</code> is the Proof’s secret, and <code>C</code>
+      is the mint’s signature on it. To execute the DLEQ proof like
+      <code>Alice</code> did above, <code>Carol</code> needs
+      <code>(B', C')</code> which she can compute herself using the
+      blinding factor <code>r</code> that she receives from
+      <code>Alice</code>.</p>
+      <p>To verify the DLEQ proof of a received token,
+      <code>Carol</code> needs to reconstruct <code>B'</code> and
+      <code>C'</code> using the blinding factor <code>r</code> that
+      <code>Alice</code> has included in the <code>Proof</code> she sent
+      to <code>Carol</code>. Since <code>Carol</code> now has all the
+      necessary information, she can execute the same equations to
+      verify the DLEQ proof as <code>Alice</code> did:</p>
+      <pre><code>Y = hash_to_curve(x)
+C&#39; = C + r*A
+B&#39; = Y + r*G
+
+R1 = ... (same as Alice)</code></pre>
+      <p>If a DLEQ proof is included in a received token, wallets
+      <strong>MUST</strong> verify the proof.</p>
+      <h3 data-number="6.3.4" id="nut-12-mint-info-setting">Mint info
+      setting</h3>
+      <p>The <a href="nut-06.html">NUT-06</a>
+      <code>MintMethodSetting</code> indicates support for this
+      feature:</p>
+      <pre class="json"><code>{
+  &quot;12&quot;: {
+    &quot;supported&quot;: true
+  }
+}</code></pre>
+      <nav class="pager pager-bottom" aria-label="Nearby sections">
+        <a class="pager-prev" href="nut-09.html" rel="prev">NUT-09: Restore signatures</a>
+        <a class="pager-next" href="nut-13.html" rel="next">NUT-13: Deterministic Secrets</a>
+      </nav>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var btn = document.getElementById("toc-toggle");
+      var toc = document.getElementById("TOC");
+      var page = (location.pathname.split("/").pop() || "index.html");
+      if (toc) {
+        toc.querySelectorAll("a").forEach(function (a) {
+          var href = a.getAttribute("href") || "";
+          if (href.split("#")[0] === page) a.classList.add("current");
+        });
+        var current = toc.querySelector("a.current");
+        if (current) current.scrollIntoView({ block: "center" });
+      }
+      document.querySelectorAll(".main h1[id], .main h2[id], .main h3[id], .main h4[id], .main h5[id], .main h6[id]").forEach(function (h) {
+        if (h.querySelector(".header-anchor")) return;
+        var a = document.createElement("a");
+        a.className = "header-anchor";
+        a.href = "#" + h.id;
+        a.setAttribute("aria-label", "Link to this heading");
+        a.textContent = "\u00B6";
+        h.appendChild(a);
+      });
+      if (!btn) return;
+      btn.addEventListener("click", function () {
+        var open = document.body.classList.toggle("toc-open");
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+      toc && toc.addEventListener("click", function (e) {
+        if (e.target.closest("a") && window.matchMedia("(max-width: 879px)").matches) {
+          document.body.classList.remove("toc-open");
+          btn.setAttribute("aria-expanded", "false");
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

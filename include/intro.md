@@ -1,4 +1,4 @@
-## Introduction
+# Introduction
 
 Welcome to the Cashu Book of NUTs. This book is nuts.
 

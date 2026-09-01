@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="compiled by Adam Shannon" />
+  <meta name="keywords" content="cashu, nuts, ecash, bitcoin, lightning, chaumian" />
+  <title>NUT-07: Token state check · Cashu Book of NUTs</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../web.css" />
+</head>
+<body class="book">
+  <header class="site">
+    <a class="brand" href="../">Cashu Book of NUTs</a>
+    <button type="button" id="toc-toggle" aria-controls="TOC" aria-expanded="false">Contents</button>
+    <nav class="site-links">
+      <a href="index.html">Contents</a>
+      <a href="https://github.com/adamdecaf/cashu-nuts-book/raw/master/cashu-book.epub">ePUB</a>
+      <a href="https://github.com/adamdecaf/cashu-nuts-book/raw/master/cashu-book.pdf">PDF</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" role="doc-toc">
+      <h2 id="toc-title">Contents</h2>
+      <ul>
+      <li><a href="introduction.html#introduction"
+      id="toc-introduction">Introduction</a></li>
+      <li><a href="how-to-read-this-book.html#how-to-read-this-book"
+      id="toc-how-to-read-this-book">How to read this book</a></li>
+      <li><a href="source-snapshot.html#source-snapshot"
+      id="toc-source-snapshot">Source snapshot</a></li>
+      <li><a href="core-protocol.html#core-protocol"
+      id="toc-core-protocol">Core protocol</a>
+      <ul>
+      <li><a href="nut-00.html#nut-00" id="toc-nut-00">NUT-00: Notation,
+      Utilization, and Terminology</a></li>
+      <li><a href="nut-01.html#nut-01" id="toc-nut-01">NUT-01: Mint public key
+      exchange</a></li>
+      <li><a href="nut-02.html#nut-02" id="toc-nut-02">NUT-02: Keysets and
+      fees</a></li>
+      <li><a href="nut-06.html#nut-06" id="toc-nut-06">NUT-06: Mint
+      information</a></li>
+      </ul></li>
+      <li><a
+      href="minting-melting-and-swapping.html#minting-melting-and-swapping"
+      id="toc-minting-melting-and-swapping">Minting, melting, and swapping</a>
+      <ul>
+      <li><a href="nut-03.html#nut-03" id="toc-nut-03">NUT-03: Swap
+      tokens</a></li>
+      <li><a href="nut-04.html#nut-04" id="toc-nut-04">NUT-04: Mint
+      tokens</a></li>
+      <li><a href="nut-05.html#nut-05" id="toc-nut-05">NUT-05: Melting
+      tokens</a></li>
+      <li><a href="nut-08.html#nut-08" id="toc-nut-08">NUT-08: Lightning fee
+      return</a></li>
+      <li><a href="nut-15.html#nut-15" id="toc-nut-15">NUT-15: Partial
+      multi-path payments</a></li>
+      <li><a href="nut-20.html#nut-20" id="toc-nut-20">NUT-20: Signature on
+      Mint Quote</a></li>
+      <li><a href="nut-29.html#nut-29" id="toc-nut-29">NUT-29: Batched
+      Minting</a></li>
+      </ul></li>
+      <li><a
+      href="proofs-restore-and-wallet-state.html#proofs-restore-and-wallet-state"
+      id="toc-proofs-restore-and-wallet-state">Proofs, restore, and wallet
+      state</a>
+      <ul>
+      <li><a href="nut-07.html#nut-07" id="toc-nut-07">NUT-07: Token state
+      check</a></li>
+      <li><a href="nut-09.html#nut-09" id="toc-nut-09">NUT-09: Restore
+      signatures</a></li>
+      <li><a href="nut-12.html#nut-12" id="toc-nut-12">NUT-12: Offline ecash
+      signature validation</a></li>
+      <li><a href="nut-13.html#nut-13" id="toc-nut-13">NUT-13: Deterministic
+      Secrets</a></li>
+      <li><a href="nut-19.html#nut-19" id="toc-nut-19">NUT-19: Cached
+      Responses</a></li>
+      </ul></li>
+      <li><a href="spending-conditions.html#spending-conditions"
+      id="toc-spending-conditions">Spending conditions</a>
+      <ul>
+      <li><a href="nut-10.html#nut-10" id="toc-nut-10">NUT-10: Spending
+      conditions</a></li>
+      <li><a href="nut-11.html#nut-11" id="toc-nut-11">NUT-11: Pay to Public
+      Key (P2PK)</a></li>
+      <li><a href="nut-14.html#nut-14" id="toc-nut-14">NUT-14: Hashed Timelock
+      Contracts (HTLCs)</a></li>
+      <li><a href="nut-28.html#nut-28" id="toc-nut-28">NUT-28:
+      Pay-to-Blinded-Key (P2BK)</a></li>
+      </ul></li>
+      <li><a
+      href="lightning-and-other-payment-methods.html#lightning-and-other-payment-methods"
+      id="toc-lightning-and-other-payment-methods">Lightning and other payment
+      methods</a>
+      <ul>
+      <li><a href="nut-23.html#nut-23" id="toc-nut-23">NUT-23: BOLT11</a></li>
+      <li><a href="nut-25.html#nut-25" id="toc-nut-25">NUT-25: BOLT12</a></li>
+      <li><a href="nut-24.html#nut-24" id="toc-nut-24">NUT-24: HTTP 402
+      Payment Required</a></li>
+      <li><a href="nut-30.html#nut-30" id="toc-nut-30">NUT-30: Payment Method:
+      Onchain</a></li>
+      </ul></li>
+      <li><a
+      href="requests-and-user-experience.html#requests-and-user-experience"
+      id="toc-requests-and-user-experience">Requests and user experience</a>
+      <ul>
+      <li><a href="nut-16.html#nut-16" id="toc-nut-16">NUT-16: Animated QR
+      codes</a></li>
+      <li><a href="nut-18.html#nut-18" id="toc-nut-18">NUT-18: Payment
+      Requests</a></li>
+      <li><a href="nut-26.html#nut-26" id="toc-nut-26">NUT-26: Payment Request
+      Bech32m Encoding</a></li>
+      </ul></li>
+      <li><a
+      href="realtime-and-authentication.html#realtime-and-authentication"
+      id="toc-realtime-and-authentication">Realtime and authentication</a>
+      <ul>
+      <li><a href="nut-17.html#nut-17" id="toc-nut-17">NUT-17:
+      WebSockets</a></li>
+      <li><a href="nut-21.html#nut-21" id="toc-nut-21">NUT-21: Clear
+      Authentication</a></li>
+      <li><a href="nut-22.html#nut-22" id="toc-nut-22">NUT-22: Blind
+      Authentication</a></li>
+      </ul></li>
+      <li><a href="nostr-integration.html#nostr-integration"
+      id="toc-nostr-integration">Nostr integration</a>
+      <ul>
+      <li><a href="nut-27.html#nut-27" id="toc-nut-27">NUT-27: Nostr Mint
+      Backup</a></li>
+      </ul></li>
+      <li><a href="conclusion.html#conclusion"
+      id="toc-conclusion">Conclusion</a></li>
+      </ul>
+    </nav>
+    <div class="main">
+      <nav class="pager" aria-label="Nearby sections">
+        <a class="pager-prev" href="proofs-restore-and-wallet-state.html" accesskey="p" rel="prev">Proofs, restore, and wallet state</a>
+        <a class="pager-next" href="nut-09.html" accesskey="n" rel="next">NUT-09: Restore signatures</a>
+      </nav>
+      <h2 data-number="6.1" id="nut-07">NUT-07: Token state check</h2>
+      <p><code>optional</code></p>
+      <p><code>used in: NUT-17, NUT-11, NUT-14</code></p>
+      <hr />
+      <p>With the token state check, wallets can ask the mint whether a
+      specific proof is already spent and whether it is in-flight in a
+      transaction. Wallets can also request the witness data that was
+      used to spend a proof.</p>
+      <h4 data-number="6.1.0.1" id="nut-07-token-states">Token
+      states</h4>
+      <p>A proof can be in one of the following states</p>
+      <ul>
+      <li>A proof is <code>UNSPENT</code> if it has not been spent
+      yet</li>
+      <li>A proof is <code>PENDING</code> if it is being processed in a
+      transaction (in an ongoing payment). A <code>PENDING</code> proof
+      cannot be used in another transaction until it is
+      <code>live</code> again.</li>
+      <li>A proof is <code>SPENT</code> if it has been redeemed and its
+      secret is in the list of spent secrets of the mint.</li>
+      </ul>
+      <p><strong>Note:</strong> Before deleting spent proofs from their
+      database, wallets can check if the proof is <code>SPENT</code> to
+      make sure that they don’t accidentally delete an unspent proof.
+      Beware that this behavior can make it easier for the mint to
+      correlate the sender to the receiver.</p>
+      <p><strong>Important:</strong> Mints <strong>MUST</strong>
+      remember which proofs are currently <code>PENDING</code> to avoid
+      reuse of the same token in multiple concurrent transactions. This
+      can be achieved with for example mutex lock whose key is the
+      <code>Proof</code>’s <code>Y</code>.</p>
+      <h3 data-number="6.1.1" id="nut-07-use-cases">Use cases</h3>
+      <h5 data-number="6.1.1.0.1"
+      id="nut-07-example-1-ecash-transaction">Example 1: Ecash
+      transaction</h5>
+      <p>When <code>Alice</code> prepares a token to be sent to
+      <code>Carol</code>, she can mark these tokens in her database as
+      <em>pending</em>. She can then, periodically or upon user input,
+      check with the mint if the token is <code>UNSPENT</code> or
+      whether it has been redeemed by <code>Carol</code> already, i.e.,
+      is <code>SPENT</code>. If the proof is not spendable anymore (and,
+      thus, has been redeemed by <code>Carol</code>), she can safely
+      delete the proof from her database.</p>
+      <h5 data-number="6.1.1.0.2"
+      id="nut-07-example-2-lightning-payments">Example 2: Lightning
+      payments</h5>
+      <p>If <code>Alice</code>’s melt operation takes a long time to
+      complete (for example if she requests a very slow Lightning
+      payment) and she closes her wallet in the meantime, the next time
+      she comes online, she can check all proofs marked as
+      <em>pending</em> in her database to determine whether the payment
+      is still in flight (mint returns <code>PENDING</code>), it has
+      succeeded (mint returns <code>SPENT</code>), or it has failed
+      (mint returns <code>UNSPENT</code>).</p>
+      <h3 data-number="6.1.2" id="nut-07-example">Example</h3>
+      <p><strong>Request</strong> of <code>Alice</code>:</p>
+      <pre class="http"><code>POST https://mint.host:3338/v1/checkstate</code></pre>
+      <p>With the data being of the form
+      <code>PostCheckStateRequest</code>:</p>
+      <pre class="json"><code>{
+  &quot;Ys&quot;: &lt;Array[hex_str]&gt;,
+}</code></pre>
+      <p>Where the elements of the array in <code>Ys</code> are the
+      hexadecimal representation of the compressed point
+      <code>Y = hash_to_curve(secret)</code> of the <code>Proof</code>
+      to check (see <a href="nut-00.html">NUT-00</a>).</p>
+      <p><strong>Response</strong> of <code>Bob</code>:</p>
+      <p><code>Bob</code> responds with a
+      <code>PostCheckStateResponse</code>:</p>
+      <pre class="json"><code>{
+  &quot;states&quot;: [
+    {
+      &quot;Y&quot;: &lt;hex_str&gt;,
+      &quot;state&quot;: &lt;str_enum[STATE]&gt;,
+      &quot;witness&quot;: &lt;str|null&gt;,
+    },
+    ...
+  ]
+}</code></pre>
+      <p>The elements of the <code>states</code> array MUST be returned
+      in the same order as the corresponding <code>Ys</code> checked in
+      the request.</p>
+      <ul>
+      <li><code>Y</code> corresponds to the <code>Proof</code> checked
+      in the request.</li>
+      <li><code>state</code> is an enum string field with possible
+      values <code>"UNSPENT"</code>, <code>"PENDING"</code>,
+      <code>"SPENT"</code></li>
+      <li><code>witness</code> is the serialized witness data that was
+      used to spend the <code>Proof</code> if the token has a <a
+      href="nut-10.html">NUT-10</a> spending condition that requires a
+      witness such as in the case of P2PK (<a
+      href="nut-11.html">NUT-11</a>) or HTLCs (<a
+      href="nut-14.html">NUT-14</a>).</li>
+      </ul>
+      <p>With curl:</p>
+      <p><strong>Request</strong> of <code>Alice</code>:</p>
+      <pre class="bash"><code>curl -X POST https://mint.host:3338/v1/checkstate -H &#39;Content-Type: application/json&#39; -d &#39;{
+  &quot;Ys&quot;: [
+    &quot;02599b9ea0a1ad4143706c2a5a4a568ce442dd4313e1cf1f7f0b58a317c1a355ee&quot;
+  ]
+}&#39;</code></pre>
+      <p><strong>Response</strong> of <code>Bob</code>:</p>
+      <pre class="json"><code>{
+  &quot;states&quot;: [
+    {
+      &quot;Y&quot;: &quot;02599b9ea0a1ad4143706c2a5a4a568ce442dd4313e1cf1f7f0b58a317c1a355ee&quot;,
+      &quot;state&quot;: &quot;SPENT&quot;,
+      &quot;witness&quot;: &quot;{\&quot;signatures\&quot;: [\&quot;b2cf120a49cb1ac3cb32e1bf5ccb6425e0a8372affdc1d41912ca35c13908062f269c0caa53607d4e1ac4c8563246c4c8a869e6ee124ea826fd4746f3515dc1e\&quot;]}&quot;
+    }
+  ]
+}</code></pre>
+      <p>Where <code>Y</code> belongs to the provided <code>Proof</code>
+      to check in the request, <code>state</code> indicates its state,
+      and <code>witness</code> is the witness data that was potentially
+      provided in a previous spend operation (can be empty).</p>
+      <h3 data-number="6.1.3" id="nut-07-mint-info-setting">Mint info
+      setting</h3>
+      <p>The <a href="nut-06.html">NUT-06</a>
+      <code>MintMethodSetting</code> indicates support for this
+      feature:</p>
+      <pre class="json"><code>{
+  &quot;7&quot;: {
+    &quot;supported&quot;: true
+  }
+}</code></pre>
+      <nav class="pager pager-bottom" aria-label="Nearby sections">
+        <a class="pager-prev" href="proofs-restore-and-wallet-state.html" rel="prev">Proofs, restore, and wallet state</a>
+        <a class="pager-next" href="nut-09.html" rel="next">NUT-09: Restore signatures</a>
+      </nav>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var btn = document.getElementById("toc-toggle");
+      var toc = document.getElementById("TOC");
+      var page = (location.pathname.split("/").pop() || "index.html");
+      if (toc) {
+        toc.querySelectorAll("a").forEach(function (a) {
+          var href = a.getAttribute("href") || "";
+          if (href.split("#")[0] === page) a.classList.add("current");
+        });
+        var current = toc.querySelector("a.current");
+        if (current) current.scrollIntoView({ block: "center" });
+      }
+      document.querySelectorAll(".main h1[id], .main h2[id], .main h3[id], .main h4[id], .main h5[id], .main h6[id]").forEach(function (h) {
+        if (h.querySelector(".header-anchor")) return;
+        var a = document.createElement("a");
+        a.className = "header-anchor";
+        a.href = "#" + h.id;
+        a.setAttribute("aria-label", "Link to this heading");
+        a.textContent = "\u00B6";
+        h.appendChild(a);
+      });
+      if (!btn) return;
+      btn.addEventListener("click", function () {
+        var open = document.body.classList.toggle("toc-open");
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+      toc && toc.addEventListener("click", function (e) {
+        if (e.target.closest("a") && window.matchMedia("(max-width: 879px)").matches) {
+          document.body.classList.remove("toc-open");
+          btn.setAttribute("aria-expanded", "false");
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

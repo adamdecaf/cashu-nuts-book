@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="compiled by Adam Shannon" />
+  <meta name="keywords" content="cashu, nuts, ecash, bitcoin, lightning, chaumian" />
+  <title>NUT-29: Batched Minting · Cashu Book of NUTs</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../web.css" />
+</head>
+<body class="book">
+  <header class="site">
+    <a class="brand" href="../">Cashu Book of NUTs</a>
+    <button type="button" id="toc-toggle" aria-controls="TOC" aria-expanded="false">Contents</button>
+    <nav class="site-links">
+      <a href="index.html">Contents</a>
+      <a href="https://github.com/adamdecaf/cashu-nuts-book/raw/master/cashu-book.epub">ePUB</a>
+      <a href="https://github.com/adamdecaf/cashu-nuts-book/raw/master/cashu-book.pdf">PDF</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" role="doc-toc">
+      <h2 id="toc-title">Contents</h2>
+      <ul>
+      <li><a href="introduction.html#introduction"
+      id="toc-introduction">Introduction</a></li>
+      <li><a href="how-to-read-this-book.html#how-to-read-this-book"
+      id="toc-how-to-read-this-book">How to read this book</a></li>
+      <li><a href="source-snapshot.html#source-snapshot"
+      id="toc-source-snapshot">Source snapshot</a></li>
+      <li><a href="core-protocol.html#core-protocol"
+      id="toc-core-protocol">Core protocol</a>
+      <ul>
+      <li><a href="nut-00.html#nut-00" id="toc-nut-00">NUT-00: Notation,
+      Utilization, and Terminology</a></li>
+      <li><a href="nut-01.html#nut-01" id="toc-nut-01">NUT-01: Mint public key
+      exchange</a></li>
+      <li><a href="nut-02.html#nut-02" id="toc-nut-02">NUT-02: Keysets and
+      fees</a></li>
+      <li><a href="nut-06.html#nut-06" id="toc-nut-06">NUT-06: Mint
+      information</a></li>
+      </ul></li>
+      <li><a
+      href="minting-melting-and-swapping.html#minting-melting-and-swapping"
+      id="toc-minting-melting-and-swapping">Minting, melting, and swapping</a>
+      <ul>
+      <li><a href="nut-03.html#nut-03" id="toc-nut-03">NUT-03: Swap
+      tokens</a></li>
+      <li><a href="nut-04.html#nut-04" id="toc-nut-04">NUT-04: Mint
+      tokens</a></li>
+      <li><a href="nut-05.html#nut-05" id="toc-nut-05">NUT-05: Melting
+      tokens</a></li>
+      <li><a href="nut-08.html#nut-08" id="toc-nut-08">NUT-08: Lightning fee
+      return</a></li>
+      <li><a href="nut-15.html#nut-15" id="toc-nut-15">NUT-15: Partial
+      multi-path payments</a></li>
+      <li><a href="nut-20.html#nut-20" id="toc-nut-20">NUT-20: Signature on
+      Mint Quote</a></li>
+      <li><a href="nut-29.html#nut-29" id="toc-nut-29">NUT-29: Batched
+      Minting</a></li>
+      </ul></li>
+      <li><a
+      href="proofs-restore-and-wallet-state.html#proofs-restore-and-wallet-state"
+      id="toc-proofs-restore-and-wallet-state">Proofs, restore, and wallet
+      state</a>
+      <ul>
+      <li><a href="nut-07.html#nut-07" id="toc-nut-07">NUT-07: Token state
+      check</a></li>
+      <li><a href="nut-09.html#nut-09" id="toc-nut-09">NUT-09: Restore
+      signatures</a></li>
+      <li><a href="nut-12.html#nut-12" id="toc-nut-12">NUT-12: Offline ecash
+      signature validation</a></li>
+      <li><a href="nut-13.html#nut-13" id="toc-nut-13">NUT-13: Deterministic
+      Secrets</a></li>
+      <li><a href="nut-19.html#nut-19" id="toc-nut-19">NUT-19: Cached
+      Responses</a></li>
+      </ul></li>
+      <li><a href="spending-conditions.html#spending-conditions"
+      id="toc-spending-conditions">Spending conditions</a>
+      <ul>
+      <li><a href="nut-10.html#nut-10" id="toc-nut-10">NUT-10: Spending
+      conditions</a></li>
+      <li><a href="nut-11.html#nut-11" id="toc-nut-11">NUT-11: Pay to Public
+      Key (P2PK)</a></li>
+      <li><a href="nut-14.html#nut-14" id="toc-nut-14">NUT-14: Hashed Timelock
+      Contracts (HTLCs)</a></li>
+      <li><a href="nut-28.html#nut-28" id="toc-nut-28">NUT-28:
+      Pay-to-Blinded-Key (P2BK)</a></li>
+      </ul></li>
+      <li><a
+      href="lightning-and-other-payment-methods.html#lightning-and-other-payment-methods"
+      id="toc-lightning-and-other-payment-methods">Lightning and other payment
+      methods</a>
+      <ul>
+      <li><a href="nut-23.html#nut-23" id="toc-nut-23">NUT-23: BOLT11</a></li>
+      <li><a href="nut-25.html#nut-25" id="toc-nut-25">NUT-25: BOLT12</a></li>
+      <li><a href="nut-24.html#nut-24" id="toc-nut-24">NUT-24: HTTP 402
+      Payment Required</a></li>
+      <li><a href="nut-30.html#nut-30" id="toc-nut-30">NUT-30: Payment Method:
+      Onchain</a></li>
+      </ul></li>
+      <li><a
+      href="requests-and-user-experience.html#requests-and-user-experience"
+      id="toc-requests-and-user-experience">Requests and user experience</a>
+      <ul>
+      <li><a href="nut-16.html#nut-16" id="toc-nut-16">NUT-16: Animated QR
+      codes</a></li>
+      <li><a href="nut-18.html#nut-18" id="toc-nut-18">NUT-18: Payment
+      Requests</a></li>
+      <li><a href="nut-26.html#nut-26" id="toc-nut-26">NUT-26: Payment Request
+      Bech32m Encoding</a></li>
+      </ul></li>
+      <li><a
+      href="realtime-and-authentication.html#realtime-and-authentication"
+      id="toc-realtime-and-authentication">Realtime and authentication</a>
+      <ul>
+      <li><a href="nut-17.html#nut-17" id="toc-nut-17">NUT-17:
+      WebSockets</a></li>
+      <li><a href="nut-21.html#nut-21" id="toc-nut-21">NUT-21: Clear
+      Authentication</a></li>
+      <li><a href="nut-22.html#nut-22" id="toc-nut-22">NUT-22: Blind
+      Authentication</a></li>
+      </ul></li>
+      <li><a href="nostr-integration.html#nostr-integration"
+      id="toc-nostr-integration">Nostr integration</a>
+      <ul>
+      <li><a href="nut-27.html#nut-27" id="toc-nut-27">NUT-27: Nostr Mint
+      Backup</a></li>
+      </ul></li>
+      <li><a href="conclusion.html#conclusion"
+      id="toc-conclusion">Conclusion</a></li>
+      </ul>
+    </nav>
+    <div class="main">
+      <nav class="pager" aria-label="Nearby sections">
+        <a class="pager-prev" href="nut-20.html" accesskey="p" rel="prev">NUT-20: Signature on Mint Quote</a>
+        <a class="pager-next" href="proofs-restore-and-wallet-state.html" accesskey="n" rel="next">Proofs, restore, and wallet state</a>
+      </nav>
+      <h2 data-number="5.7" id="nut-29">NUT-29: Batched Minting</h2>
+      <p><code>optional</code></p>
+      <p><code>depends on: NUT-04</code></p>
+      <p><code>uses: NUT-20</code></p>
+      <p>This spec describes how a wallet can mint multiple quotes in
+      one batched operation by requesting blind signatures for multiple
+      quotes in a single atomic request.</p>
+      <hr />
+      <h3 data-number="5.7.1" id="nut-29-batch-checking-mint-quotes">1.
+      Batch Checking Mint Quotes</h3>
+      <p>Before minting, the wallet SHOULD verify each mint quote’s
+      current accounting state. It does this by sending:</p>
+      <pre class="http"><code>POST https://mint.host:3338/v1/mint/quote/{method}/check</code></pre>
+      <p>The wallet includes the following body in its request:</p>
+      <pre class="json"><code>{
+  &quot;quotes&quot;: &lt;Array[str]&gt;
+}</code></pre>
+      <p>where <code>quotes</code> is an array of <em>unique</em> mint
+      quote IDs.</p>
+      <p>The mint returns a JSON array of mint quote objects as defined
+      by the payment method’s NUT specification. The quotes in this
+      array MUST be in the same order as in the request.</p>
+      <h5 data-number="5.7.1.0.1" id="nut-29-example">Example</h5>
+      <p>Below is an example for checking two bolt11 mint quotes.</p>
+      <h6 data-number="5.7.1.0.1.1" id="nut-29-request">Request</h6>
+      <pre class="http"><code>POST https://mint.host:3338/v1/mint/quote/bolt11/check
+Content-Type: application/json
+
+{
+  &quot;quotes&quot;: [ &quot;019e6d5a-2347-7000-8037-b42dae20f1fe&quot;, &quot;019e6d5a-2347-7000-868a-08e59a1c6716&quot; ]
+}</code></pre>
+      <h6 data-number="5.7.1.0.1.2" id="nut-29-response">Response</h6>
+      <pre class="json"><code>[
+  {
+    &quot;quote&quot;: &quot;019e6d5a-2347-7000-8037-b42dae20f1fe&quot;,
+    &quot;request&quot;: &quot;lnbc...&quot;,
+    &quot;amount_paid&quot;: 100,
+    &quot;amount_issued&quot;: 0,
+    &quot;updated_at&quot;: 1234567800,
+    &quot;state&quot;: &quot;PAID&quot;,
+    &quot;unit&quot;: &quot;sat&quot;,
+    &quot;amount&quot;: 100,
+    &quot;expiry&quot;: 1234567890
+  },
+  {
+    &quot;quote&quot;: &quot;019e6d5a-2347-7000-868a-08e59a1c6716&quot;,
+    &quot;request&quot;: &quot;lnbc...&quot;,
+    &quot;amount_paid&quot;: 0,
+    &quot;amount_issued&quot;: 0,
+    &quot;updated_at&quot;: 1234567800,
+    &quot;state&quot;: &quot;UNPAID&quot;,
+    &quot;unit&quot;: &quot;sat&quot;,
+    &quot;amount&quot;: 50,
+    &quot;expiry&quot;: 1234567890
+  }
+]</code></pre>
+      <h5 data-number="5.7.1.0.2" id="nut-29-error-handling">Error
+      Handling</h5>
+      <p>This is a query endpoint that uses all-or-nothing error
+      handling, matching the behavior of the batch mint endpoint:</p>
+      <ul>
+      <li>If any <code>quote_id</code> is not known by the mint, the
+      mint MUST reject the entire request and return an appropriate
+      error</li>
+      <li>If any <code>quote_id</code> cannot be parsed (invalid
+      format), the mint MUST reject the entire request and return an
+      appropriate error</li>
+      </ul>
+      <hr />
+      <h3 data-number="5.7.2" id="nut-29-executing-the-batched-mint">2.
+      Executing the Batched Mint</h3>
+      <h5 data-number="5.7.2.0.1" id="nut-29-request-by-wallet">Request
+      by wallet</h5>
+      <p>Once all quoted payments are confirmed, the wallet mints the
+      proofs by calling:</p>
+      <pre class="http"><code>POST https://mint.host:3338/v1/mint/{method}/batch</code></pre>
+      <p>The batch endpoint is method-specific: every quote in the batch
+      <strong>MUST</strong> be for the same payment <code>method</code>
+      as the <code>{method}</code> in the URL, and a batch that mixes
+      payment methods <strong>MUST</strong> be rejected by the mint.</p>
+      <p>The wallet includes the following body in its request:</p>
+      <pre class="json"><code>{
+  &quot;quotes&quot;: &lt;Array[str]&gt;,
+  &quot;quote_amounts&quot;: &lt;Array[int]|null&gt;, // Optional
+  &quot;outputs&quot;: &lt;Array[BlindedMessage]&gt;,
+  &quot;signatures&quot;: &lt;Array[string]|null&gt; // Optional
+}</code></pre>
+      <ul>
+      <li><code>quotes</code>: array of <em>unique</em> quote IDs.</li>
+      <li><code>quote_amounts</code>: array of expected amounts to mint
+      per quote, in the same order as <code>quotes</code>.
+      <ul>
+      <li>Required for payment methods that demand an amount like
+      bolt12; Optional for other methods like bolt11.</li>
+      </ul></li>
+      <li><code>outputs</code>: array of blinded messages (see <a
+      href="nut-00.html">NUT-00</a>).</li>
+      <li><code>signatures</code>: array of signatures for NUT-20 locked
+      quotes. See <a href="nut-29.html#nut-29-nut-20-support">NUT-20
+      Support</a></li>
+      </ul>
+      <h5 data-number="5.7.2.0.2" id="nut-29-response-by-mint">Response
+      by mint</h5>
+      <p>The mint responds with:</p>
+      <pre class="json"><code>{
+  &quot;signatures&quot;: &lt;Array[BlindSignature]&gt;
+}</code></pre>
+      <ul>
+      <li><code>signatures</code>: an array of blind signatures, one for
+      each provided blinded message, in the same order as the
+      <code>outputs</code> array.</li>
+      </ul>
+      <h4 data-number="5.7.2.1" id="nut-29-example-1">Example</h4>
+      <p>Below is an example for minting two NUT-20 locked bolt11 mint
+      quotes.</p>
+      <h6 data-number="5.7.2.1.0.1" id="nut-29-request-1">Request</h6>
+      <pre class="http"><code>POST https://mint.host:3338/v1/mint/bolt12/batch
+Content-Type: application/json
+
+{
+  &quot;quotes&quot;: [
+    &quot;019e6d5a-2347-7000-8037-b42dae20f1fe&quot;,
+    &quot;019e6d5a-2347-7000-868a-08e59a1c6716&quot;
+  ],
+  &quot;quote_amounts&quot;: [
+    100,
+    50
+  ],
+  &quot;signatures&quot;: [
+    &quot;d9be080b33179387e504bb6991ea41ae0dd715e28b01ce9f63d57198a095bccc776874914288e6989e97ac9d255ac667c205fa8d90a211184b417b4ffdd24092&quot;,
+    &quot;f2d97118390195cf5bef21d84c94e505dcdc2760154519536f74ba5e27f886f313b82296610df14db1d91d346e988ed384070bad084aaf06d14ccd7686157f24&quot;
+  ],
+  &quot;outputs&quot;: [
+    {
+      &quot;amount&quot;: 128,
+      &quot;id&quot;: &quot;009a1f293253e41e&quot;,
+      &quot;B_&quot;: &quot;035015e6d7ade60ba8426cefaf1832bbd27257636e44a76b922d78e79b47cb689d&quot;
+    },
+    {
+      &quot;amount&quot;: 16,
+      &quot;id&quot;: &quot;009a1f293253e41e&quot;,
+      &quot;B_&quot;: &quot;0288d7649652d0a83fc9c966c969fb217f15904431e61a44b14999fabc1b5d9ac6&quot;
+    },
+    {
+      &quot;amount&quot;: 4,
+      &quot;id&quot;: &quot;009a1f293253e41e&quot;,
+      &quot;B_&quot;: &quot;03b85be0c0a9f51056375b632a2f2c8149831b9827fad677be9807455e7d84b584&quot;
+    },
+    {
+      &quot;amount&quot;: 2,
+      &quot;id&quot;: &quot;009a1f293253e41e&quot;,
+      &quot;B_&quot;: &quot;0276bbcf69e1b1238e6d39fc14c84e7cdfd519fee07f3369d2b2b23045390e2efc&quot;
+    }
+  ]
+}</code></pre>
+      <h6 data-number="5.7.2.1.0.2" id="nut-29-response-1">Response</h6>
+      <pre class="json"><code>{
+  &quot;signatures&quot;: [
+    &quot;0208657b2917f469f275226cc931e5389451f6eed515d586ad16fa7a700eed4fb6&quot;,
+    &quot;037dc0b5e712a39ef22f5bba1d49bc65a323ab9e0b771f7281d8c33280e2e58dbc&quot;
+  ]
+}</code></pre>
+      <h4 data-number="5.7.2.2" id="nut-29-request-validation">Request
+      Validation</h4>
+      <p>The mint MUST validate the following before processing a batch
+      mint request:</p>
+      <ol type="1">
+      <li><strong>Non-empty batch</strong>: The <code>quotes</code>
+      array MUST NOT be empty</li>
+      <li><strong>Unique quotes</strong>: All quote IDs in the
+      <code>quotes</code> array MUST be unique (no duplicates) — error
+      code <code>11016</code></li>
+      <li><strong>Valid quote IDs</strong>: All quote IDs MUST exist in
+      the mint’s database</li>
+      <li><strong>Payment method consistency</strong>: All quotes MUST
+      have the same payment method, matching <code>{method}</code> in
+      the URL path</li>
+      <li><strong>Currency unit consistency</strong>: All quotes MUST
+      use the same currency unit</li>
+      <li><strong>Quote state</strong>: All quotes MUST be in PAID state
+      (or have a mintable amount for payment methods that allow multiple
+      mint operations like bolt12)</li>
+      <li><strong>Amount balance</strong>: The sum of amounts contained
+      in the <code>outputs</code> MUST equal the sum of
+      <code>quote_amounts</code> (bolt11) or MUST NOT exceed it
+      (bolt12)</li>
+      <li><strong>Signature validation (NUT-20)</strong>: The
+      <code>signatures</code> array length MUST match the
+      <code>quotes</code> array length; locked quotes MUST include a
+      valid signature; unlocked quotes MUST NOT include one</li>
+      </ol>
+      <p>Implementations MAY impose additional constraints such as
+      maximum batch size based on their resource limitations. If any
+      validation fails, the mint MUST reject the entire batch and return
+      an appropriate error without minting any quotes.</p>
+      <h4 data-number="5.7.2.3" id="nut-29-nut-20-support">NUT-20
+      support</h4>
+      <p>Per <a href="nut-20.html">NUT-20</a>, quotes can require
+      authentication via signatures. When using batch minting with
+      NUT-20 locked quotes:</p>
+      <h5 data-number="5.7.2.3.1"
+      id="nut-29-signature-array-structure">Signature Array
+      Structure</h5>
+      <p><strong>Array structure:</strong></p>
+      <ul>
+      <li>The <code>signatures</code> field is an array with length
+      equal to <code>quotes.length</code> (one entry per quote)</li>
+      <li><code>signatures[i]</code> corresponds to
+      <code>quotes[i]</code></li>
+      </ul>
+      <p><strong>Per-quote signatures:</strong></p>
+      <ul>
+      <li><strong>Locked quotes</strong> (with <code>pubkey</code>):
+      <code>signatures[i]</code> contains the signature string</li>
+      <li><strong>Unlocked quotes</strong>: <code>signatures[i]</code>
+      is <code>null</code></li>
+      </ul>
+      <p><strong>Field requirement:</strong></p>
+      <ul>
+      <li><strong>Required</strong>: If ANY quote is locked</li>
+      <li><strong>Optional</strong>: May be omitted entirely if all
+      quotes are unlocked</li>
+      </ul>
+      <h5 data-number="5.7.2.3.2"
+      id="nut-29-signature-message">Signature Message</h5>
+      <p>Each locked quote is signed independently exactly as in <a
+      href="nut-20.html">NUT-20</a>: <code>signatures[i]</code> is the
+      NUT-20 signature over <code>quotes[i]</code> and the request’s
+      <code>outputs</code>. The batch <code>outputs</code> are a single
+      consolidated set (not partitioned per quote), so each signature is
+      computed over the full <code>outputs</code> array.</p>
+      <p>Following the <a
+      href="nut-20.html#nut-20-message-aggregation">NUT-20 message
+      aggregation</a> pattern, the signature message for
+      <code>quotes[i]</code> is computed as:</p>
+      <pre><code>msg_to_sign = b&quot;Cashu_MintQuoteSig_v1&quot;
+              || len32(quotes[i]) || quotes[i]
+              || for each output j (in request order):
+                   len32(amount_j) || amount_j
+                   || len32(B_j)   || B_j</code></pre>
+      <p>Where:</p>
+      <ul>
+      <li><code>b"Cashu_MintQuoteSig_v1"</code> is the domain-separation
+      tag as raw ASCII bytes, not length-prefixed.</li>
+      <li><code>quotes[i]</code> is the UTF-8 encoded quote ID from the
+      request’s <code>quotes</code> array at index <code>i</code></li>
+      <li><code>outputs</code> are <strong>all blinded messages</strong>
+      from the request’s <code>outputs</code> array (regardless of which
+      quote they correspond to)</li>
+      <li><code>amount_j</code> is the output amount as canonical
+      minimal big-endian bytes (e.g. <code>0</code> → empty byte array,
+      <code>1</code> → <code>0x01</code>, <code>256</code> →
+      <code>0x0100</code>); thus <code>len32(amount_j)</code> is its
+      length in bytes as a 32-bit integer (e.g. <code>0</code> for
+      amount <code>0</code>, <code>1</code> for amount <code>1</code>,
+      <code>2</code> for amount <code>256</code>).</li>
+      <li><code>B_j</code> is the raw byte representation of the blinded
+      message (e.g. 33-byte compressed secp256k1 or 48-byte BLS12-381
+      point), decoded from the request’s hex string.</li>
+      <li><code>||</code> denotes byte concatenation and
+      <code>len32(x)</code> is the 32-bit (4-byte) big-endian length of
+      the following data <code>x</code>.</li>
+      </ul>
+      <h4 data-number="5.7.2.4"
+      id="nut-29-signature-validation-failure">Signature Validation
+      Failure</h4>
+      <p>If <strong>any signature in the batch is invalid</strong>, the
+      mint MUST reject the <strong>entire batch</strong> and return an
+      error. This maintains atomicity: all quotes must be successfully
+      authenticated and minted together, or none at all.</p>
+      <h4 data-number="5.7.2.5" id="nut-29-example-2">Example</h4>
+      <pre class="json"><code>{
+  &quot;quotes&quot;: [
+    &quot;019e6d5a-2347-7000-8005-9428c4fc5edb&quot;,
+    &quot;019e6d5a-2347-7000-841a-4d222fd00a33&quot;,
+    &quot;019e6d5a-2347-7000-8d60-d35c1a9e19b3&quot;
+  ],
+  &quot;outputs&quot;: [
+    { &quot;amount&quot;: 64, &quot;id&quot;: &quot;keyset_1&quot;, &quot;B_&quot;: &quot;...&quot; },
+    { &quot;amount&quot;: 64, &quot;id&quot;: &quot;keyset_1&quot;, &quot;B_&quot;: &quot;...&quot; },
+    { &quot;amount&quot;: 22, &quot;id&quot;: &quot;keyset_1&quot;, &quot;B_&quot;: &quot;...&quot; }
+  ],
+  &quot;signatures&quot;: [
+    &quot;d9be080b...&quot;, // Signature for quote[0], covers ALL 3 outputs
+    null, // Quote[1] is unlocked
+    &quot;a1c5f7e2...&quot; // Signature for quote[2], covers ALL 3 outputs
+  ]
+}</code></pre>
+      <h3 data-number="5.7.3"
+      id="nut-29-implementation-notes">Implementation Notes</h3>
+      <h4 data-number="5.7.3.1" id="nut-29-batch-size-limits">Batch Size
+      Limits</h4>
+      <p>Mints MAY advertise a maximum batch size through the <a
+      href="nut-06.html">NUT-06</a> mint info endpoint. The batch size
+      limit is included in the <code>nuts</code> object under the
+      <code>29</code> key:</p>
+      <pre class="json"><code>{
+  &quot;nuts&quot;: {
+    &quot;29&quot;: {
+      &quot;max_batch_size&quot;: 100,
+      &quot;methods&quot;: [&quot;bolt11&quot;, &quot;bolt12&quot;]
+    }
+  }
+}</code></pre>
+      <p>Fields:</p>
+      <ul>
+      <li><code>max_batch_size</code> (optional): Maximum number of
+      quotes allowed in a single batch request. If omitted, the batch
+      size limit is implementation-defined and clients MUST handle error
+      code <code>11017</code> gracefully.</li>
+      <li><code>methods</code> (optional): Array of payment methods
+      supported for batch minting. If omitted, all methods supported by
+      the mint (per NUT-04) are available for batching.</li>
+      </ul>
+      <nav class="pager pager-bottom" aria-label="Nearby sections">
+        <a class="pager-prev" href="nut-20.html" rel="prev">NUT-20: Signature on Mint Quote</a>
+        <a class="pager-next" href="proofs-restore-and-wallet-state.html" rel="next">Proofs, restore, and wallet state</a>
+      </nav>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var btn = document.getElementById("toc-toggle");
+      var toc = document.getElementById("TOC");
+      var page = (location.pathname.split("/").pop() || "index.html");
+      if (toc) {
+        toc.querySelectorAll("a").forEach(function (a) {
+          var href = a.getAttribute("href") || "";
+          if (href.split("#")[0] === page) a.classList.add("current");
+        });
+        var current = toc.querySelector("a.current");
+        if (current) current.scrollIntoView({ block: "center" });
+      }
+      document.querySelectorAll(".main h1[id], .main h2[id], .main h3[id], .main h4[id], .main h5[id], .main h6[id]").forEach(function (h) {
+        if (h.querySelector(".header-anchor")) return;
+        var a = document.createElement("a");
+        a.className = "header-anchor";
+        a.href = "#" + h.id;
+        a.setAttribute("aria-label", "Link to this heading");
+        a.textContent = "\u00B6";
+        h.appendChild(a);
+      });
+      if (!btn) return;
+      btn.addEventListener("click", function () {
+        var open = document.body.classList.toggle("toc-open");
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+      toc && toc.addEventListener("click", function (e) {
+        if (e.target.closest("a") && window.matchMedia("(max-width: 879px)").matches) {
+          document.body.classList.remove("toc-open");
+          btn.setAttribute("aria-expanded", "false");
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

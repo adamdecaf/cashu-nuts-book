@@ -13,7 +13,7 @@ else
 fi
 
 {
-    echo "## Source snapshot"
+    echo "# Source snapshot"
     echo ""
     echo "This book was built from the following commit of [cashubtc/nuts](https://github.com/cashubtc/nuts). If something here disagrees with upstream, upstream wins."
     echo ""

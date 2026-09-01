@@ -1,4 +1,4 @@
-## Conclusion
+# Conclusion
 
 Thank you for exploring the Cashu Book of NUTs. I hope grouping the specs by theme made Chaumian ecash a little easier to hold in your head.
 

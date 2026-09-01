@@ -1,4 +1,4 @@
-## How to read this book
+# How to read this book
 
 The NUTs were written as numbered documents. That numbering is still how implementations refer to them — NUT-04, NUT-11, and so on — but it is not the best order for a first read.
 

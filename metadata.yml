@@ -1,6 +1,9 @@
 ---
 title:  'Cashu Book of NUTs'
 lang: en
+spec-kind: nut
+epub-url: https://github.com/adamdecaf/cashu-nuts-book/raw/master/cashu-book.epub
+pdf-url: https://github.com/adamdecaf/cashu-nuts-book/raw/master/cashu-book.pdf
 author:
   - compiled by Adam Shannon
 keywords: [cashu, nuts, ecash, bitcoin, lightning, chaumian]

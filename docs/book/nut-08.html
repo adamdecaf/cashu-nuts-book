@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="compiled by Adam Shannon" />
+  <meta name="keywords" content="cashu, nuts, ecash, bitcoin, lightning, chaumian" />
+  <title>NUT-08: Lightning fee return · Cashu Book of NUTs</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../web.css" />
+</head>
+<body class="book">
+  <header class="site">
+    <a class="brand" href="../">Cashu Book of NUTs</a>
+    <button type="button" id="toc-toggle" aria-controls="TOC" aria-expanded="false">Contents</button>
+    <nav class="site-links">
+      <a href="index.html">Contents</a>
+      <a href="https://github.com/adamdecaf/cashu-nuts-book/raw/master/cashu-book.epub">ePUB</a>
+      <a href="https://github.com/adamdecaf/cashu-nuts-book/raw/master/cashu-book.pdf">PDF</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" role="doc-toc">
+      <h2 id="toc-title">Contents</h2>
+      <ul>
+      <li><a href="introduction.html#introduction"
+      id="toc-introduction">Introduction</a></li>
+      <li><a href="how-to-read-this-book.html#how-to-read-this-book"
+      id="toc-how-to-read-this-book">How to read this book</a></li>
+      <li><a href="source-snapshot.html#source-snapshot"
+      id="toc-source-snapshot">Source snapshot</a></li>
+      <li><a href="core-protocol.html#core-protocol"
+      id="toc-core-protocol">Core protocol</a>
+      <ul>
+      <li><a href="nut-00.html#nut-00" id="toc-nut-00">NUT-00: Notation,
+      Utilization, and Terminology</a></li>
+      <li><a href="nut-01.html#nut-01" id="toc-nut-01">NUT-01: Mint public key
+      exchange</a></li>
+      <li><a href="nut-02.html#nut-02" id="toc-nut-02">NUT-02: Keysets and
+      fees</a></li>
+      <li><a href="nut-06.html#nut-06" id="toc-nut-06">NUT-06: Mint
+      information</a></li>
+      </ul></li>
+      <li><a
+      href="minting-melting-and-swapping.html#minting-melting-and-swapping"
+      id="toc-minting-melting-and-swapping">Minting, melting, and swapping</a>
+      <ul>
+      <li><a href="nut-03.html#nut-03" id="toc-nut-03">NUT-03: Swap
+      tokens</a></li>
+      <li><a href="nut-04.html#nut-04" id="toc-nut-04">NUT-04: Mint
+      tokens</a></li>
+      <li><a href="nut-05.html#nut-05" id="toc-nut-05">NUT-05: Melting
+      tokens</a></li>
+      <li><a href="nut-08.html#nut-08" id="toc-nut-08">NUT-08: Lightning fee
+      return</a></li>
+      <li><a href="nut-15.html#nut-15" id="toc-nut-15">NUT-15: Partial
+      multi-path payments</a></li>
+      <li><a href="nut-20.html#nut-20" id="toc-nut-20">NUT-20: Signature on
+      Mint Quote</a></li>
+      <li><a href="nut-29.html#nut-29" id="toc-nut-29">NUT-29: Batched
+      Minting</a></li>
+      </ul></li>
+      <li><a
+      href="proofs-restore-and-wallet-state.html#proofs-restore-and-wallet-state"
+      id="toc-proofs-restore-and-wallet-state">Proofs, restore, and wallet
+      state</a>
+      <ul>
+      <li><a href="nut-07.html#nut-07" id="toc-nut-07">NUT-07: Token state
+      check</a></li>
+      <li><a href="nut-09.html#nut-09" id="toc-nut-09">NUT-09: Restore
+      signatures</a></li>
+      <li><a href="nut-12.html#nut-12" id="toc-nut-12">NUT-12: Offline ecash
+      signature validation</a></li>
+      <li><a href="nut-13.html#nut-13" id="toc-nut-13">NUT-13: Deterministic
+      Secrets</a></li>
+      <li><a href="nut-19.html#nut-19" id="toc-nut-19">NUT-19: Cached
+      Responses</a></li>
+      </ul></li>
+      <li><a href="spending-conditions.html#spending-conditions"
+      id="toc-spending-conditions">Spending conditions</a>
+      <ul>
+      <li><a href="nut-10.html#nut-10" id="toc-nut-10">NUT-10: Spending
+      conditions</a></li>
+      <li><a href="nut-11.html#nut-11" id="toc-nut-11">NUT-11: Pay to Public
+      Key (P2PK)</a></li>
+      <li><a href="nut-14.html#nut-14" id="toc-nut-14">NUT-14: Hashed Timelock
+      Contracts (HTLCs)</a></li>
+      <li><a href="nut-28.html#nut-28" id="toc-nut-28">NUT-28:
+      Pay-to-Blinded-Key (P2BK)</a></li>
+      </ul></li>
+      <li><a
+      href="lightning-and-other-payment-methods.html#lightning-and-other-payment-methods"
+      id="toc-lightning-and-other-payment-methods">Lightning and other payment
+      methods</a>
+      <ul>
+      <li><a href="nut-23.html#nut-23" id="toc-nut-23">NUT-23: BOLT11</a></li>
+      <li><a href="nut-25.html#nut-25" id="toc-nut-25">NUT-25: BOLT12</a></li>
+      <li><a href="nut-24.html#nut-24" id="toc-nut-24">NUT-24: HTTP 402
+      Payment Required</a></li>
+      <li><a href="nut-30.html#nut-30" id="toc-nut-30">NUT-30: Payment Method:
+      Onchain</a></li>
+      </ul></li>
+      <li><a
+      href="requests-and-user-experience.html#requests-and-user-experience"
+      id="toc-requests-and-user-experience">Requests and user experience</a>
+      <ul>
+      <li><a href="nut-16.html#nut-16" id="toc-nut-16">NUT-16: Animated QR
+      codes</a></li>
+      <li><a href="nut-18.html#nut-18" id="toc-nut-18">NUT-18: Payment
+      Requests</a></li>
+      <li><a href="nut-26.html#nut-26" id="toc-nut-26">NUT-26: Payment Request
+      Bech32m Encoding</a></li>
+      </ul></li>
+      <li><a
+      href="realtime-and-authentication.html#realtime-and-authentication"
+      id="toc-realtime-and-authentication">Realtime and authentication</a>
+      <ul>
+      <li><a href="nut-17.html#nut-17" id="toc-nut-17">NUT-17:
+      WebSockets</a></li>
+      <li><a href="nut-21.html#nut-21" id="toc-nut-21">NUT-21: Clear
+      Authentication</a></li>
+      <li><a href="nut-22.html#nut-22" id="toc-nut-22">NUT-22: Blind
+      Authentication</a></li>
+      </ul></li>
+      <li><a href="nostr-integration.html#nostr-integration"
+      id="toc-nostr-integration">Nostr integration</a>
+      <ul>
+      <li><a href="nut-27.html#nut-27" id="toc-nut-27">NUT-27: Nostr Mint
+      Backup</a></li>
+      </ul></li>
+      <li><a href="conclusion.html#conclusion"
+      id="toc-conclusion">Conclusion</a></li>
+      </ul>
+    </nav>
+    <div class="main">
+      <nav class="pager" aria-label="Nearby sections">
+        <a class="pager-prev" href="nut-05.html" accesskey="p" rel="prev">NUT-05: Melting tokens</a>
+        <a class="pager-next" href="nut-15.html" accesskey="n" rel="next">NUT-15: Partial multi-path payments</a>
+      </nav>
+      <h2 data-number="5.4" id="nut-08">NUT-08: Lightning fee
+      return</h2>
+      <p><code>optional</code></p>
+      <p><code>depends on: NUT-05</code></p>
+      <hr />
+      <p>This document describes how the overpaid Lightning fees are
+      handled and extends <a href="nut-05.html">NUT-05</a> which
+      describes melting tokens (i.e. paying a Lightning invoice). In
+      short, a wallet includes <em>blank outputs</em> when paying a
+      Lightning invoice which can be assigned a value by the mint if the
+      user has overpaid Lightning fees. This can be the case due to the
+      unpredictability of Lightning network fees. To solve this issue,
+      we introduce so-called <em>blank outputs</em> which are blinded
+      messages with an undetermined value.</p>
+      <p>The problem is also described in <a
+      href="https://gist.github.com/callebtc/a6cc0bd2b6f70e081e478147c40fc578">this
+      gist</a>.</p>
+      <h3 data-number="5.4.1" id="nut-08-description">Description</h3>
+      <p>Before requesting a Lightning payment as described in <a
+      href="nut-05.html">NUT-05</a>, <code>Alice</code> produces a
+      number of <code>BlindedMessage</code> which are similar to
+      ordinary blinded messages but their value is yet to be determined
+      by the mint <code>Bob</code> and are thus called <em>blank
+      outputs</em>. The number of necessary blank outputs is
+      <code>max(ceil(log2(fee_reserve)), 1)</code> which ensures that
+      there is at least one output if there is any fee. If the
+      <code>fee_reserve</code> is <code>0</code>, then the number of
+      blank outputs is <code>0</code> as well. The blank outputs will
+      contain the overpaid fees that will be returned by the mint to the
+      wallet.</p>
+      <p>This code calculates the number of necessary blank outputs in
+      Python:</p>
+      <pre class="python"><code>def calculate_number_of_blank_outputs(fee_reserve_sat: int) -&gt; int:
+    assert fee_reserve_sat &gt;= 0, &quot;Fee reserve can&#39;t be negative.&quot;
+    if fee_reserve_sat == 0:
+        return 0
+    return max(math.ceil(math.log2(fee_reserve_sat)), 1)</code></pre>
+      <h3 data-number="5.4.2" id="nut-08-example">Example</h3>
+      <p>The wallet wants to pay an invoice with
+      <code>amount := 100 000 sat</code> and determines by asking the
+      mint that <code>fee_reserve</code> is <code>1000 sats</code>. The
+      wallet then provides <code>101 000 sat</code> worth of proofs and
+      10 blank <code>outputs</code> to make the payment (since
+      <code>ceil(log2(1000))=ceil(9.96..)=10</code>). The mint pays the
+      invoice and determines that the actual fee was
+      <code>100 sat</code>, i.e, the overpaid fee to return is
+      <code>fee_return = 900 sat</code>. The mint splits the amount
+      <code>900</code> into summands of <code>2^n</code> which is
+      <code>4, 128, 256, 512</code>. The mint inserts these amounts into
+      the blank <code>outputs</code> it received form the wallet and
+      generates 4 new promises. The mint then returns these
+      <code>BlindSignature</code>s to the wallet together with the
+      successful payment status.</p>
+      <h3 data-number="5.4.3" id="nut-08-wallet-flow">Wallet flow</h3>
+      <p>The wallet asks the mint for the <code>fee_reserve</code> for
+      paying a specific bolt11 invoice of value <code>amount</code> by
+      calling <code>POST /v1/melt/quote</code> as described in <a
+      href="nut-05.html">NUT-05</a>. The wallet then provides a
+      <code>PostMeltBolt11Request</code> to
+      <code>POST /v1/melt/bolt11</code> that has (1) proofs of the value
+      <code>amount+fee+fee_reserve</code>, (2) the bolt11 invoice to be
+      paid, and finally, as a new entry, (3) a field
+      <code>outputs</code> that has <code>n_blank_outputs</code> blinded
+      messages that are generated before the payment attempt to receive
+      potential overpaid fees back to her.</p>
+      <h3 data-number="5.4.4" id="nut-08-mint-flow">Mint flow</h3>
+      <p>Here we describe how the mint generates
+      <code>BlindSignature</code>s for the overpaid fees. The mint
+      <code>Bob</code> returns in
+      <code>PostMeltQuoteBolt11Response</code> the field
+      <code>change</code> <strong>ONLY IF</strong> <code>Alice</code>
+      has previously provided <code>outputs</code> for the change
+      <strong>AND</strong> if the the <code>inputs</code> provided were
+      greater then the <code>total_amount_paid - fees</code>.</p>
+      <p>If the
+      <code>overpaid_fees = input_amount - fees - total_paid</code> is
+      positive, <code>Bob</code> decomposes it to amounts supported by
+      the keyset, typically <code>2^n</code>, and imprints them into the
+      <code>blank_outputs</code> provided by <code>Alice</code>.</p>
+      <p><code>Bob</code> then signs these blank outputs (now with the
+      imprinted amounts) and thus generates
+      <code>BlindSignature</code>s. <code>Bob</code> then returns a
+      payment status to the wallet, and, in addition, all blind
+      signatures it generated for the overpaid fees.</p>
+      <p>Importantly, while <code>Bob</code> does not necessarily return
+      the same number of blind signatures as it received blank outputs
+      from <code>Alice</code> (since some of them may be of value 0),
+      <code>Bob</code> <strong>MUST</strong> return the all blank
+      signatures with a value greater than 0 in the same order as the
+      blank outputs were received and should omit all blind signatures
+      with value 0. For example, if <code>Bob</code> receives 10 blank
+      outputs but the overpaid fees only occupy 4 blind signatures,
+      <code>Bob</code> will only return these 4 blind signatures with
+      the appropriate imprinted amounts and omit the remaining 6 blind
+      signatures with value 0. Due to the well-defined order of the
+      returned blind signatures, <code>Alice</code> can map the blind
+      signatures returned from <code>Bob</code> to the blank outputs it
+      provided so that she can further apply the correct unblinding
+      operations on them.</p>
+      <h3 data-number="5.4.5" id="nut-08-example-1">Example</h3>
+      <p><strong>Request</strong> of <code>Alice</code>:</p>
+      <pre class="http"><code>POST https://mint.host:3338/v1/melt/bolt11</code></pre>
+      <p>With the data being of the form
+      <code>PostMeltBolt11Request</code>:</p>
+      <pre class="json"><code>{
+  &quot;quote&quot;: &lt;str&gt;,
+  &quot;inputs&quot;: &lt;Array[Proof]&gt;,
+  &quot;outputs&quot;: &lt;Array[BlindedMessage]&gt; &lt;-- New
+}</code></pre>
+      <p>where the new <code>output</code> field carries the
+      <code>BlindMessages</code>.</p>
+      <p>The mint <code>Bob</code> then responds with a
+      <code>PostMeltQuoteBolt11Response</code>:</p>
+      <pre class="json"><code>{
+  &quot;quote&quot;: &lt;str&gt;,
+  &quot;request&quot;: &lt;str&gt;,
+  &quot;amount&quot;: &lt;int&gt;,
+  &quot;unit&quot;: &lt;str_enum[UNIT]&gt;,
+  &quot;fee_reserve&quot;: &lt;int&gt;,
+  &quot;state&quot;: &lt;str_enum[STATE]&gt;,
+  &quot;expiry&quot;: &lt;int&gt;,
+  &quot;payment_preimage&quot;: &lt;str|null&gt;,
+  &quot;change&quot;: &lt;Array[BlindSignature]&gt; &lt;-- New
+}</code></pre>
+      <p>where the new <code>change</code> field carries the returned
+      <code>BlindSignature</code>s due to overpaid fees.</p>
+      <h3 data-number="5.4.6" id="nut-08-example-2">Example</h3>
+      <p>Request of <code>Alice</code> with curl:</p>
+      <pre class="bash"><code>curl -X POST https://mint.host:3338/v1/melt/bolt11 -d \
+&#39;{
+  &quot;quote&quot;: &quot;019e6d5a-2347-7000-813e-a11ea6e419e7&quot;,
+  &quot;inputs&quot;: [
+    {
+      &quot;amount&quot;: 4,
+      &quot;id&quot;: &quot;009a1f293253e41e&quot;,
+      &quot;secret&quot;: &quot;429700b812a58436be2629af8731a31a37fce54dbf8cbbe90b3f8553179d23f5&quot;,
+      &quot;C&quot;: &quot;03b01869f528337e161a6768b480fcf9f75fd248b649c382f5e352489fd84fd011&quot;,
+    },
+    {
+      &quot;amount&quot;: 8,
+      &quot;id&quot;: &quot;009a1f293253e41e&quot;,
+      &quot;secret&quot;: &quot;4f3155acef6481108fcf354f6d06e504ce8b441e617d30c88924991298cdbcad&quot;,
+      &quot;C&quot;: &quot;0278ab1c1af35487a5ea903b693e96447b2034d0fd6bac529e753097743bf73ca9&quot;,
+    }
+  ],
+  &quot;outputs&quot;: [
+    {
+      &quot;amount&quot;: 0,
+      &quot;id&quot;: &quot;009a1f293253e41e&quot;,
+      &quot;B_&quot;: &quot;03327fc4fa333909b70f08759e217ce5c94e6bf1fc2382562f3c560c5580fa69f4&quot;
+    }
+  ]
+}&#39;</code></pre>
+      <p>Everything here is the same as in <a
+      href="nut-05.html">NUT-05</a> except for <code>outputs</code>.
+      <code>Alice</code> <strong>MUST</strong> set the
+      <code>amount</code> of each blank output to <code>0</code>, and
+      <code>Bob</code> <strong>MUST</strong> ignore it, imprinting the
+      amount himself.</p>
+      <p>If the mint has made a successful payment, it will respond the
+      following.</p>
+      <p><strong>Response</strong>
+      <code>PostMeltQuoteBolt11Response</code> from
+      <code>Bob</code>:</p>
+      <pre class="json"><code>{
+  &quot;state&quot;: &quot;PAID&quot;,
+  &quot;payment_preimage&quot;: &quot;c5a1ae1f639e1f4a3872e81500fd028bece7bedc1152f740cba5c3417b748c1b&quot;,
+  &quot;change&quot;: [
+    {
+      &quot;id&quot;: &quot;009a1f293253e41e&quot;,
+      &quot;amount&quot;: 2,
+      &quot;C_&quot;: &quot;03c668f551855ddc792e22ea61d32ddfa6a45b1eb659ce66e915bf5127a8657be0&quot;
+    }
+  ]
+}</code></pre>
+      <p>The field <code>change</code> is an array of
+      <code>BlindSignatures</code> that account for the overpaid fees.
+      Notice that the amount has been changed by the mint.
+      <code>Alice</code> must take these and generate
+      <code>Proofs</code> by unblinding them as described in <a
+      href="nut-00.html">NUT-00</a> and as she does in <a
+      href="nut-04.html">NUT-04</a> when minting new tokens. After
+      generating the <code>Proofs</code>, <code>Alice</code> stores them
+      in her database.</p>
+      <h3 data-number="5.4.7" id="nut-08-mint-info-setting">Mint info
+      setting</h3>
+      <p>The <a href="nut-06.html">NUT-06</a>
+      <code>MintMethodSetting</code> indicates support for this
+      feature:</p>
+      <pre class="json"><code>{
+  &quot;8&quot;: {
+    &quot;supported&quot;: true
+  }
+}</code></pre>
+      <nav class="pager pager-bottom" aria-label="Nearby sections">
+        <a class="pager-prev" href="nut-05.html" rel="prev">NUT-05: Melting tokens</a>
+        <a class="pager-next" href="nut-15.html" rel="next">NUT-15: Partial multi-path payments</a>
+      </nav>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var btn = document.getElementById("toc-toggle");
+      var toc = document.getElementById("TOC");
+      var page = (location.pathname.split("/").pop() || "index.html");
+      if (toc) {
+        toc.querySelectorAll("a").forEach(function (a) {
+          var href = a.getAttribute("href") || "";
+          if (href.split("#")[0] === page) a.classList.add("current");
+        });
+        var current = toc.querySelector("a.current");
+        if (current) current.scrollIntoView({ block: "center" });
+      }
+      document.querySelectorAll(".main h1[id], .main h2[id], .main h3[id], .main h4[id], .main h5[id], .main h6[id]").forEach(function (h) {
+        if (h.querySelector(".header-anchor")) return;
+        var a = document.createElement("a");
+        a.className = "header-anchor";
+        a.href = "#" + h.id;
+        a.setAttribute("aria-label", "Link to this heading");
+        a.textContent = "\u00B6";
+        h.appendChild(a);
+      });
+      if (!btn) return;
+      btn.addEventListener("click", function () {
+        var open = document.body.classList.toggle("toc-open");
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+      toc && toc.addEventListener("click", function (e) {
+        if (e.target.closest("a") && window.matchMedia("(max-width: 879px)").matches) {
+          document.body.classList.remove("toc-open");
+          btn.setAttribute("aria-expanded", "false");
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

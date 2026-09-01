@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="compiled by Adam Shannon" />
+  <meta name="keywords" content="cashu, nuts, ecash, bitcoin, lightning, chaumian" />
+  <title>NUT-28: Pay-to-Blinded-Key (P2BK) · Cashu Book of NUTs</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../web.css" />
+</head>
+<body class="book">
+  <header class="site">
+    <a class="brand" href="../">Cashu Book of NUTs</a>
+    <button type="button" id="toc-toggle" aria-controls="TOC" aria-expanded="false">Contents</button>
+    <nav class="site-links">
+      <a href="index.html">Contents</a>
+      <a href="https://github.com/adamdecaf/cashu-nuts-book/raw/master/cashu-book.epub">ePUB</a>
+      <a href="https://github.com/adamdecaf/cashu-nuts-book/raw/master/cashu-book.pdf">PDF</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" role="doc-toc">
+      <h2 id="toc-title">Contents</h2>
+      <ul>
+      <li><a href="introduction.html#introduction"
+      id="toc-introduction">Introduction</a></li>
+      <li><a href="how-to-read-this-book.html#how-to-read-this-book"
+      id="toc-how-to-read-this-book">How to read this book</a></li>
+      <li><a href="source-snapshot.html#source-snapshot"
+      id="toc-source-snapshot">Source snapshot</a></li>
+      <li><a href="core-protocol.html#core-protocol"
+      id="toc-core-protocol">Core protocol</a>
+      <ul>
+      <li><a href="nut-00.html#nut-00" id="toc-nut-00">NUT-00: Notation,
+      Utilization, and Terminology</a></li>
+      <li><a href="nut-01.html#nut-01" id="toc-nut-01">NUT-01: Mint public key
+      exchange</a></li>
+      <li><a href="nut-02.html#nut-02" id="toc-nut-02">NUT-02: Keysets and
+      fees</a></li>
+      <li><a href="nut-06.html#nut-06" id="toc-nut-06">NUT-06: Mint
+      information</a></li>
+      </ul></li>
+      <li><a
+      href="minting-melting-and-swapping.html#minting-melting-and-swapping"
+      id="toc-minting-melting-and-swapping">Minting, melting, and swapping</a>
+      <ul>
+      <li><a href="nut-03.html#nut-03" id="toc-nut-03">NUT-03: Swap
+      tokens</a></li>
+      <li><a href="nut-04.html#nut-04" id="toc-nut-04">NUT-04: Mint
+      tokens</a></li>
+      <li><a href="nut-05.html#nut-05" id="toc-nut-05">NUT-05: Melting
+      tokens</a></li>
+      <li><a href="nut-08.html#nut-08" id="toc-nut-08">NUT-08: Lightning fee
+      return</a></li>
+      <li><a href="nut-15.html#nut-15" id="toc-nut-15">NUT-15: Partial
+      multi-path payments</a></li>
+      <li><a href="nut-20.html#nut-20" id="toc-nut-20">NUT-20: Signature on
+      Mint Quote</a></li>
+      <li><a href="nut-29.html#nut-29" id="toc-nut-29">NUT-29: Batched
+      Minting</a></li>
+      </ul></li>
+      <li><a
+      href="proofs-restore-and-wallet-state.html#proofs-restore-and-wallet-state"
+      id="toc-proofs-restore-and-wallet-state">Proofs, restore, and wallet
+      state</a>
+      <ul>
+      <li><a href="nut-07.html#nut-07" id="toc-nut-07">NUT-07: Token state
+      check</a></li>
+      <li><a href="nut-09.html#nut-09" id="toc-nut-09">NUT-09: Restore
+      signatures</a></li>
+      <li><a href="nut-12.html#nut-12" id="toc-nut-12">NUT-12: Offline ecash
+      signature validation</a></li>
+      <li><a href="nut-13.html#nut-13" id="toc-nut-13">NUT-13: Deterministic
+      Secrets</a></li>
+      <li><a href="nut-19.html#nut-19" id="toc-nut-19">NUT-19: Cached
+      Responses</a></li>
+      </ul></li>
+      <li><a href="spending-conditions.html#spending-conditions"
+      id="toc-spending-conditions">Spending conditions</a>
+      <ul>
+      <li><a href="nut-10.html#nut-10" id="toc-nut-10">NUT-10: Spending
+      conditions</a></li>
+      <li><a href="nut-11.html#nut-11" id="toc-nut-11">NUT-11: Pay to Public
+      Key (P2PK)</a></li>
+      <li><a href="nut-14.html#nut-14" id="toc-nut-14">NUT-14: Hashed Timelock
+      Contracts (HTLCs)</a></li>
+      <li><a href="nut-28.html#nut-28" id="toc-nut-28">NUT-28:
+      Pay-to-Blinded-Key (P2BK)</a></li>
+      </ul></li>
+      <li><a
+      href="lightning-and-other-payment-methods.html#lightning-and-other-payment-methods"
+      id="toc-lightning-and-other-payment-methods">Lightning and other payment
+      methods</a>
+      <ul>
+      <li><a href="nut-23.html#nut-23" id="toc-nut-23">NUT-23: BOLT11</a></li>
+      <li><a href="nut-25.html#nut-25" id="toc-nut-25">NUT-25: BOLT12</a></li>
+      <li><a href="nut-24.html#nut-24" id="toc-nut-24">NUT-24: HTTP 402
+      Payment Required</a></li>
+      <li><a href="nut-30.html#nut-30" id="toc-nut-30">NUT-30: Payment Method:
+      Onchain</a></li>
+      </ul></li>
+      <li><a
+      href="requests-and-user-experience.html#requests-and-user-experience"
+      id="toc-requests-and-user-experience">Requests and user experience</a>
+      <ul>
+      <li><a href="nut-16.html#nut-16" id="toc-nut-16">NUT-16: Animated QR
+      codes</a></li>
+      <li><a href="nut-18.html#nut-18" id="toc-nut-18">NUT-18: Payment
+      Requests</a></li>
+      <li><a href="nut-26.html#nut-26" id="toc-nut-26">NUT-26: Payment Request
+      Bech32m Encoding</a></li>
+      </ul></li>
+      <li><a
+      href="realtime-and-authentication.html#realtime-and-authentication"
+      id="toc-realtime-and-authentication">Realtime and authentication</a>
+      <ul>
+      <li><a href="nut-17.html#nut-17" id="toc-nut-17">NUT-17:
+      WebSockets</a></li>
+      <li><a href="nut-21.html#nut-21" id="toc-nut-21">NUT-21: Clear
+      Authentication</a></li>
+      <li><a href="nut-22.html#nut-22" id="toc-nut-22">NUT-22: Blind
+      Authentication</a></li>
+      </ul></li>
+      <li><a href="nostr-integration.html#nostr-integration"
+      id="toc-nostr-integration">Nostr integration</a>
+      <ul>
+      <li><a href="nut-27.html#nut-27" id="toc-nut-27">NUT-27: Nostr Mint
+      Backup</a></li>
+      </ul></li>
+      <li><a href="conclusion.html#conclusion"
+      id="toc-conclusion">Conclusion</a></li>
+      </ul>
+    </nav>
+    <div class="main">
+      <nav class="pager" aria-label="Nearby sections">
+        <a class="pager-prev" href="nut-14.html" accesskey="p" rel="prev">NUT-14: Hashed Timelock Contracts (HTLCs)</a>
+        <a class="pager-next" href="lightning-and-other-payment-methods.html" accesskey="n" rel="next">Lightning and other payment methods</a>
+      </nav>
+      <h2 data-number="7.4" id="nut-28">NUT-28: Pay-to-Blinded-Key
+      (P2BK)</h2>
+      <p><code>optional</code></p>
+      <p><code>depends on: NUT-11</code></p>
+      <hr />
+      <h3 data-number="7.4.1" id="nut-28-summary">Summary</h3>
+      <p>This NUT describes Pay-to-Blinded-Key (P2BK), which extends the
+      <a href="nut-11.html">NUT-11</a> (P2PK) spending conditions. By
+      implication, it also extends <a href="nut-14.html">NUT-14</a>
+      (HTLC).</p>
+      <p>P2BK preserves privacy by blinding each NUT-11 receiver pubkey
+      <code>P</code> with an ECDH-derived scalar <code>rᵢ</code>. Both
+      sides can deterministically derive the same <code>rᵢ</code> from
+      their own keys, but a third party cannot. This improves user
+      privacy by preventing the mint from linking multiple P2PK spends
+      by the same party.</p>
+      <h3 data-number="7.4.2" id="nut-28-ecdh-shared-secret-zx">ECDH
+      Shared Secret (Zx)</h3>
+      <p>Elliptic-curve Diffie–Hellman (ECDH) allows two parties to
+      create an x-coordinate shared secret (<code>Zx</code>) by
+      combining their private key with the public key of the other
+      party: <code>Zx = x(epG) = x(eP) = x(pE)</code>.</p>
+      <p>For P2BK, the sender creates an ephemeral keypair (private key:
+      <code>e</code>, public key: <code>E</code>), which protects the
+      privacy of their usual long-lived public key. They then calculate
+      the shared secret by combining the ephemeral private key
+      (<code>e</code>) and the receiver’s long-lived public key
+      (<code>P</code>).</p>
+      <p>The receiver calculates the same shared secret <code>Zx</code>
+      using their private key (<code>p</code>) and the ephemeral public
+      key (<code>E</code>), which is supplied by the sender in the <a
+      href="nut-28.html#nut-28-proof-object-extension">proof
+      metadata</a>.</p>
+      <p>The shared secret <code>Zx</code> is then used to derive the
+      blinded public keys.</p>
+      <h3 data-number="7.4.3"
+      id="nut-28-deriving-blinded-public-keys">Deriving Blinded Public
+      Keys</h3>
+      <p>Per NUT-11, there are up to 11 locking ‘slots’ in the order:
+      <code>[data, ...pubkeys, ...refund]</code>.</p>
+      <p>Slot 0 is the <code>data</code> tag. Slots 1-10 can be any
+      combination of <code>pubkeys</code> and <code>refund</code>
+      keys.</p>
+      <p>Each public key in the NUT-11 proof is permanently blinded
+      using a deterministic blinding scalar (<code>rᵢ</code>), where
+      <code>i</code> is the <em>slot index</em>.</p>
+      <p>The blinding scalar for each slot is calculated as:</p>
+      <pre><code>rᵢ = SHA-256( DOMAIN_SEPARATOR || Zx || i_byte)</code></pre>
+      <p>Where:</p>
+      <ul>
+      <li><code>DOMAIN_SEPARATOR</code> constant byte string
+      <code>b"Cashu_P2BK_v1"</code></li>
+      <li><code>Zx</code> is the ECDH shared secret (<code>eP</code> for
+      sender, <code>pE</code> for receiver).</li>
+      <li><code>i_byte</code> is the single unsigned byte representation
+      of <code>i</code>: (<code>0x00</code> to <code>0x0A</code>)</li>
+      <li><code>||</code> denotes concatenation</li>
+      </ul>
+      <p>If <code>rᵢ</code> is not in the range
+      <code>1 ≤ rᵢ ≤ n−1</code>, retry once with an extra
+      <code>0xff</code> byte appended to the hash input as follows:</p>
+      <pre><code>rᵢ = SHA-256( b&quot;Cashu_P2BK_v1&quot; || Zx || i_byte || 0xff )</code></pre>
+      <p>If <code>rᵢ</code> is still not in the range
+      <code>1 ≤ rᵢ ≤ n−1</code>, abort and discard the ephemeral
+      keypair.</p>
+      <p>Finally, the public key (<code>P</code>) for slot
+      <code>i</code> is blinded (<code>P'</code>) as follows:</p>
+      <pre><code>P&#39; = P + rᵢG</code></pre>
+      <h4 data-number="7.4.3.1" id="nut-28-example">Example</h4>
+      <p>Below is an example implementation in TypeScript.</p>
+      <pre class="ts"><code>function deriveP2BKBlindingTweakFromECDH(
+  point: WeierstrassPoint&lt;bigint&gt;, // E or P
+  scalar: bigint, // p or e
+  slotIndex: number, // i
+): bigint {
+  // Calculate x-only ECDH shared point (Zx)
+  const Zx = point.multiply(scalar).toBytes(true).slice(1);
+  const iByte = new Uint8Array([slotIndex &amp; 0xff]);
+  // Derive deterministic blinding factor (r):
+  // Note: bytesToNumber does NOT reduce modulo n
+  let r: bigint = bytesToNumber(sha256(Bytes.concat(P2BK_DST, Zx, iByte)));
+  if (r === 0n || r &gt;= secp256k1.Point.CURVE().n) {
+    // Very unlikely to get here!
+    r = bytesToNumber(
+      sha256(Bytes.concat(P2BK_DST, Zx, iByte, new Uint8Array([0xff]))),
+    );
+    if (r === 0n || r &gt;= secp256k1.Point.CURVE().n) {
+      // Astronomically unlikely to get here!
+      throw new Error(&quot;P2BK: tweak derivation failed&quot;);
+    }
+  }
+  return r;
+}</code></pre>
+      <p>For detailed examples of slot blinding, see the <a
+      href="tests/28-tests.md">test vectors</a>.</p>
+      <blockquote>
+      <p>[!IMPORTANT] All receiver keys <strong>MUST</strong> be in
+      compressed SEC1 format (33 bytes) before ECDH and blinding.<br />
+      The sender <strong>MUST add an ‘02’ prefix</strong> to BIP-340
+      x-only pubkeys (eg Nostr).</p>
+      </blockquote>
+      <h3 data-number="7.4.4" id="nut-28-proof-object-extension">Proof
+      Object Extension</h3>
+      <p>Each proof adds a single new metadata field:</p>
+      <pre class="jsonc"><code>{
+  &quot;amount&quot;: int,
+  &quot;id&quot;: hex_str,
+  &quot;secret&quot;: str,          // still [&quot;P2PK&quot;, {...}]
+  &quot;C&quot;: hex_str,
+  &quot;p2pk_e&quot;: hex_str       // NEW: 33-byte SEC1 compressed ephemeral public key E
+}</code></pre>
+      <ul>
+      <li><code>p2pk_e</code> contains the sender’s ephemeral pubkey
+      (<code>E</code>) used for blinding</li>
+      <li>All pubkeys inside the <code>"P2PK"</code> secret are the
+      blinded forms <code>P'</code></li>
+      <li>The mint sees standard P2PK data and remains unaware of the
+      blinding</li>
+      <li>For Token V4 encoding, the <code>p2pk_e</code> field is named
+      <code>pe</code>, and <code>E</code> is encoded as a 33 byte CBOR
+      bstr</li>
+      </ul>
+      <h3 data-number="7.4.5" id="nut-28-deriving-private-keys">Deriving
+      Private Keys</h3>
+      <p>With P2BK, the NUT-11 public locking keys are permanently
+      blinded. The mint sees only the blinded public keys, and expects
+      signatures from the corresponding private key.</p>
+      <p>The receiver must therefore derive the correct blinded private
+      key (<code>k</code>). Because BIP-340 lifts public keys to even-Y
+      parity, there are two possible derivation paths:</p>
+      <ul>
+      <li>Standard derivation: <code>k = (p + rᵢ) mod n</code></li>
+      <li>Negated derivation: <code>k = (-p + rᵢ) mod n</code></li>
+      </ul>
+      <p>Where <code>p</code> is the receiver’s long lived private
+      key.</p>
+      <p>To decide which derivation to use, the receiver calculates
+      their natural pubkey (<code>pG</code>) and compares the parity to
+      their actual pubkey (<code>P</code>).</p>
+      <p>If the parity matches, use standard derivation, otherwise use
+      negated derivation.</p>
+      <p>The fastest way to do this in a wallet is to unblind, verify
+      the key is a match, then select derivation by parity:</p>
+      <ol type="a">
+      <li>compute <code>Rᵢ = rᵢG</code><br />
+      </li>
+      <li>unblind <code>P = P' − Rᵢ</code><br />
+      </li>
+      <li>verify <code>x(P) == x(pG)</code><br />
+      </li>
+      <li>use standard derivation if
+      <code>parity(P) == parity(pG)</code>, otherwise use negated
+      derivation</li>
+      </ol>
+      <h3 data-number="7.4.6" id="nut-28-sender-workflow">Sender
+      Workflow</h3>
+      <ol type="1">
+      <li>Generate a fresh random scalar <code>e</code> and compute
+      <code>E = eG</code></li>
+      <li>For <strong>each receiver key</strong> <code>P</code>,
+      compute:<br />
+
+      <ol type="a">
+      <li>Unique shared secret for this key:
+      <code>Zx = x(eP)</code><br />
+      </li>
+      <li>Slot index <code>i</code> in
+      <code>[data, ...pubkeys, ...refund]</code><br />
+      </li>
+      <li>Blinding scalar:
+      <code>rᵢ = SHA-256(b"Cashu_P2BK_v1" || Zx || i_byte)</code><br />
+      </li>
+      <li>Blinded Public Key: <code>P' = P + rᵢG</code></li>
+      </ol></li>
+      <li>Build the canonical P2PK secret with the blinded
+      <code>P'</code> keys in their slots.</li>
+      <li>Interact with the mint normally; the mint never learns
+      <code>P</code> or <code>rᵢ</code></li>
+      <li>Include <code>p2pk_e = E</code> in the final proof</li>
+      </ol>
+      <blockquote>
+      <p>[!IMPORTANT] Use a fresh ephemeral keypair (<code>e</code> /
+      <code>E</code>) for each new output, so that every proof has
+      unique blinded keys and a unique <code>E</code> in the
+      <code>Proof.p2pk_e</code> field.</p>
+      <p>In the case of <code>SIG_ALL</code>, the <strong>SAME</strong>
+      ephemeral keypair <strong>MUST</strong> be used for all outputs,
+      as all <code>SIG_ALL</code> proof secrets must have IDENTICAL
+      <code>data</code> and <code>tags</code> fields.</p>
+      </blockquote>
+      <h3 data-number="7.4.7" id="nut-28-receiver-workflow">Receiver
+      Workflow</h3>
+      <ol type="1">
+      <li>Read <code>E</code> from <code>proof.p2pk_e</code> and the key
+      slot order index <code>i</code> from
+      <code>[data, ...pubkeys, ...refund]</code></li>
+      <li>Calculate your unique shared secret:
+      <code>Zx = x(pE)</code></li>
+      <li>For each slot <code>i</code>, compute:<br />
+
+      <ol type="a">
+      <li>Blinding scalar:
+      <code>rᵢ = SHA-256(b"Cashu_P2BK_v1" || Zx || i_byte)</code><br />
+      </li>
+      <li>Compute <code>Rᵢ = rᵢG</code><br />
+      </li>
+      <li>Unblind <code>P = P' − Rᵢ</code><br />
+      </li>
+      <li>Verify <code>x(P) == x(pG)</code>. If it does not match, this
+      <code>P'</code> is not for this private key, skip it.<br />
+      </li>
+      <li>Derive the secret key using:</li>
+      </ol>
+      <ul>
+      <li>standard derivation if
+      <code>parity(P) == parity(pG)</code></li>
+      <li>negative derivation otherwise</li>
+      </ul></li>
+      <li>Remove the <code>p2pk_e</code> field from the proof</li>
+      <li>Sign with the derived private keys and spend as an ordinary
+      P2PK proof</li>
+      </ol>
+      <blockquote>
+      <p>[!NOTE] Each receiver can only calculate their OWN shared
+      secret (<code>pE</code>), because a shared secret requires either
+      the receiver’s private key (<code>pE</code>) or the sender’s
+      ephemeral private key (<code>eP</code>).</p>
+      </blockquote>
+      <nav class="pager pager-bottom" aria-label="Nearby sections">
+        <a class="pager-prev" href="nut-14.html" rel="prev">NUT-14: Hashed Timelock Contracts (HTLCs)</a>
+        <a class="pager-next" href="lightning-and-other-payment-methods.html" rel="next">Lightning and other payment methods</a>
+      </nav>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var btn = document.getElementById("toc-toggle");
+      var toc = document.getElementById("TOC");
+      var page = (location.pathname.split("/").pop() || "index.html");
+      if (toc) {
+        toc.querySelectorAll("a").forEach(function (a) {
+          var href = a.getAttribute("href") || "";
+          if (href.split("#")[0] === page) a.classList.add("current");
+        });
+        var current = toc.querySelector("a.current");
+        if (current) current.scrollIntoView({ block: "center" });
+      }
+      document.querySelectorAll(".main h1[id], .main h2[id], .main h3[id], .main h4[id], .main h5[id], .main h6[id]").forEach(function (h) {
+        if (h.querySelector(".header-anchor")) return;
+        var a = document.createElement("a");
+        a.className = "header-anchor";
+        a.href = "#" + h.id;
+        a.setAttribute("aria-label", "Link to this heading");
+        a.textContent = "\u00B6";
+        h.appendChild(a);
+      });
+      if (!btn) return;
+      btn.addEventListener("click", function () {
+        var open = document.body.classList.toggle("toc-open");
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+      toc && toc.addEventListener("click", function (e) {
+        if (e.target.closest("a") && window.matchMedia("(max-width: 879px)").matches) {
+          document.body.classList.remove("toc-open");
+          btn.setAttribute("aria-expanded", "false");
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

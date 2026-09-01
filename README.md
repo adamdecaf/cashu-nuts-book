@@ -4,7 +4,9 @@ The [Cashu Notation, Usage, and Terminology (NUTs)](https://github.com/cashubtc/
 
 NUTs are the community's specs for Chaumian ecash on Bitcoin. Upstream they live as numbered markdown files. This project leaves that text alone, groups related NUTs into chapters, and builds an ebook from the result.
 
-The book is compiled by Adam Shannon. The NUTs are written by their original authors.
+The book is compiled by Adam Shannon. The NUTs are written by their original authors. Cover image by [@stl1988](https://github.com/stl1988), generated with Seedream v4.
+
+![The web reader, with a chapter list on the left and NUT-00 on the right](images/web-reader.png)
 
 ## Get the book
 
@@ -26,6 +28,14 @@ Chapters, not NUT numbers:
 8. Nostr integration — mint backup
 
 NUTs 00–06 are mandatory for wallets and mints. Later chapters are optional.
+
+## Other books
+
+Same idea, different specs. The spec text in each book is unchanged from upstream.
+
+- [Nostr Book of NIPs](https://github.com/adamdecaf/nostr-book) ([read](https://nostr-book.org/))
+- [Lightning Book of BOLTs](https://github.com/adamdecaf/lightning-bolt-book) ([read](https://adamdecaf.github.io/lightning-bolt-book/))
+- [Bitcoin Book of BIPs](https://github.com/adamdecaf/bitcoin-bips-book) ([read](https://adamdecaf.github.io/bitcoin-bips-book/))
 
 ## Contributing
 

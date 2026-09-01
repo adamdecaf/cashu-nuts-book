@@ -8,6 +8,7 @@ The book is compiled by Adam Shannon. The NUTs are written by their original aut
 
 ## Get the book
 
+- Website: [adamdecaf.github.io/cashu-nuts-book](https://adamdecaf.github.io/cashu-nuts-book/)
 - [ePUB](https://github.com/adamdecaf/cashu-nuts-book/raw/master/cashu-book.epub)
 - [PDF](https://github.com/adamdecaf/cashu-nuts-book/raw/master/cashu-book.pdf)
 

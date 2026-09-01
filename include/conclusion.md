@@ -1,9 +1,9 @@
 ## Conclusion
 
-Thank you for exploring the Cashu Book of NUTs. My hope is that this reorganized collection of Cashu Book of (NUTs) has provided you with a clearer and more structured understanding of the Cashu protocol. The aim was to make the information more accessible to everyone.
+Thank you for exploring the Cashu Book of NUTs. I hope grouping the specs by theme made Chaumian ecash a little easier to hold in your head.
 
-As we wrap up this book, remember that the journey with Cashu doesn’t end here. The protocol is continuously evolving, and your engagement and contributions are crucial for its growth and refinement. I encourage you to participate in the discussions, contribute your ideas, and help in developing this open and decentralized platform.
+Cashu is still moving. New NUTs will show up, old ones will get sharper, and wallets and mints will keep choosing which optional pieces to ship. If you want to help, the conversation and the spec text live in [cashubtc/nuts](https://github.com/cashubtc/nuts).
 
-Once again, all the credit for the content in this book goes to the original authors of the NUTs. This compilation is merely a tool to assist in navigating their innovative work. Whether you’re a developer, researcher, or enthusiast, your insights and enthusiasm are what will propel Cashu forward.
+Once again, all the credit for the protocol belongs to the original NUT authors and the people implementing them. This compilation is only a reading order.
 
-Let’s keep the spirit of innovation and collaboration alive. Here's to building a more connected and decentralized future together!
+Here's to private, bearer bitcoin. Don't spend it all in one place.

@@ -1,10 +1,10 @@
 ---
-title:  Cashu Book of NUTs
+title:  'Cashu Book of NUTs'
 author:
-  - TODO
-keywords: [cashu, decentralized]
+  - compiled by Adam Shannon
+keywords: [cashu, nuts, ecash, bitcoin, lightning, chaumian]
 abstract: |
-  This is the abstract.
+  A thematically organized reading of the Cashu NUTs (Notation, Usage, and Terminology).
 
-  It consists of two paragraphs.
+  The protocol specifications themselves are written by the Cashu community. This book groups them so wallets, mints, and curious humans can follow the story of Chaumian ecash on Bitcoin.
 ---

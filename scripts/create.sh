@@ -76,7 +76,7 @@ fi
 chapters=()
 for input in "${inputs[@]}"
 do
-    if [[ "$format" == "pdf" ]]; then
+    if [[ "$format" == "pdf" && "$input" == include/* && "$input" != include/pagebreak.md ]]; then
         chapters+=("include/pagebreak.md" "$input")
     else
         chapters+=("$input")
@@ -97,6 +97,7 @@ function create_pdf() {
            --toc --toc-depth 2 \
            --pdf-engine=xelatex \
            --columns=72 --wrap=auto \
+           -f markdown-strikeout-footnotes \
            --syntax-highlighting=none \
            --resource-path=.:nuts \
            -V fontsize="10pt" \

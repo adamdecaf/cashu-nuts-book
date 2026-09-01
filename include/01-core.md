@@ -5,3 +5,10 @@ This is the foundation. NUT-00 defines the cryptography and the models: proofs, 
 Wallets and mints `MUST` implement NUT-00 through NUT-06. The remaining mandatory specs — swap, mint, and melt — are in the next chapter, next to the optional payment features that extend them.
 
 Later chapters in this book are optional.
+
+**In this chapter**
+
+- NUT-00 — Cryptography and models
+- NUT-01 — Mint public keys
+- NUT-02 — Keysets and fees
+- NUT-06 — Mint info

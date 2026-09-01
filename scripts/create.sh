@@ -97,7 +97,7 @@ function create_pdf() {
            --toc --toc-depth 2 \
            --pdf-engine=xelatex \
            --columns=72 --wrap=auto \
-           --syntax-highlighting=idiomatic \
+           --syntax-highlighting=none \
            --resource-path=.:nuts \
            -V fontsize="10pt" \
            -V mainfont="Palatino" \

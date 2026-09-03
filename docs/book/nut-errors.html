@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="compiled by Adam Shannon" />
   <meta name="keywords" content="cashu, nuts, ecash, bitcoin, lightning, chaumian" />
-  <title>NUT-24: HTTP 402 Payment Required · Cashu Book of NUTs</title>
+  <title>NUT Errors · Cashu Book of NUTs</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -27,7 +27,6 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="../web.css" />
 </head>
@@ -158,63 +157,239 @@
     </nav>
     <div class="main">
       <nav class="pager" aria-label="Nearby sections">
-        <a class="pager-prev" href="nut-25.html" accesskey="p" rel="prev">NUT-25: BOLT12</a>
-        <a class="pager-next" href="nut-30.html" accesskey="n" rel="next">NUT-30: Payment Method: Onchain</a>
+        <a class="pager-prev" href="nut-29.html" accesskey="p" rel="prev">NUT-29: Batched Minting</a>
+        <a class="pager-next" href="proofs-restore-and-wallet-state.html" accesskey="n" rel="next">Proofs, restore, and wallet state</a>
       </nav>
-      <h2 data-number="8.3" id="nut-24">NUT-24: HTTP 402 Payment
-      Required</h2>
-      <p><code>optional</code></p>
-      <p><code>uses: NUT-12</code></p>
-      <p><code>depends on: NUT-18, NUT-26</code></p>
-      <hr />
-      <p>This NUT describes how Cashu tokens can be used with HTTP 402
-      Payment Required responses to enable payments for HTTP
-      resources.</p>
-      <h4 data-number="8.3.0.1" id="nut-24-server-response">Server
-      response</h4>
-      <p>HTTP servers may respond with the HTTP status code 402 and an
-      <code>X-Cashu</code> header containing a payment request, encoded
-      in either <a href="nut-18.html">NUT-18</a> <code>creqA</code> or
-      <a href="nut-26.html">NUT-26</a> <code>creqB</code> formats.
-      Wallets <strong>MUST</strong> support both formats.</p>
-      <p>The decoded payment request has the following fields:</p>
-      <pre><code>{
-    &quot;a&quot;: int,
-    &quot;u&quot;: str,
-    &quot;m&quot;: Array[str],
-    &quot;nut10&quot;: NUT10Option &lt;optional&gt;
-}</code></pre>
-      <ul>
-      <li><code>a</code>: The amount required in the specified unit</li>
-      <li><code>u</code>: The currency unit (e.g., “sat”, “usd”,
-      “api”)</li>
-      <li><code>m</code>: Array of mint URLs that the server accepts
-      tokens from</li>
-      <li><code>nut10</code>: The required <a
-      href="nut-10.html">NUT-10</a> locking condition</li>
-      </ul>
-      <p>Note: there is no transport field since we expect an in-band
-      payment.</p>
-      <h4 data-number="8.3.0.2" id="nut-24-client-payment">Client
-      payment</h4>
-      <p>After receiving a 402 response with a <code>X-Cashu</code>
-      header, the client may retry the request with a
-      <code>cashuB</code> token in the <code>X-Cashu</code> header as
-      payment.</p>
-      <p>The token MUST be from one of the mints listed in the
-      <code>mints</code> array, and MUST be of the same
-      <code>unit</code> and greater than or equal to the
-      <code>amount</code>.</p>
-      <h3 data-number="8.3.1" id="nut-24-payment-response">Payment
-      response</h3>
-      <p>If the server receives tokens from a mint that is not in the
-      <code>mints</code> array, an incorrect <code>unit</code>, an
-      insufficient amount of tokens, or with insufficient locking
-      conditions, it should respond with a HTTP <code>400</code> status
-      code.</p>
+      <h2 data-number="5.8" id="nut-errors">NUT Errors</h2>
+      <table>
+      <colgroup>
+      <col style="width: 4%" />
+      <col style="width: 44%" />
+      <col style="width: 50%" />
+      </colgroup>
+      <thead>
+      <tr>
+      <th>Code</th>
+      <th>Description</th>
+      <th>Relevant nuts</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>10001</td>
+      <td>Proof verification failed</td>
+      <td><a href="nut-03.html">NUT-03</a>, <a
+      href="nut-05.html">NUT-05</a></td>
+      </tr>
+      <tr>
+      <td>11001</td>
+      <td>Proofs already spent</td>
+      <td><a href="nut-03.html">NUT-03</a>, <a
+      href="nut-05.html">NUT-05</a></td>
+      </tr>
+      <tr>
+      <td>11002</td>
+      <td>Proofs are pending</td>
+      <td><a href="nut-03.html">NUT-03</a>, <a
+      href="nut-05.html">NUT-05</a></td>
+      </tr>
+      <tr>
+      <td>11003</td>
+      <td>Outputs already signed</td>
+      <td><a href="nut-03.html">NUT-03</a>, <a
+      href="nut-04.html">NUT-04</a>, <a
+      href="nut-05.html">NUT-05</a></td>
+      </tr>
+      <tr>
+      <td>11004</td>
+      <td>Outputs are pending</td>
+      <td><a href="nut-03.html">NUT-03</a>, <a
+      href="nut-04.html">NUT-04</a>, <a
+      href="nut-05.html">NUT-05</a></td>
+      </tr>
+      <tr>
+      <td>11005</td>
+      <td>Transaction is not balanced (inputs != outputs)</td>
+      <td><a href="nut-02.html">NUT-02</a>, <a
+      href="nut-03.html">NUT-03</a>, <a
+      href="nut-05.html">NUT-05</a></td>
+      </tr>
+      <tr>
+      <td>11006</td>
+      <td>Amount outside of limit range</td>
+      <td><a href="nut-04.html">NUT-04</a>, <a
+      href="nut-05.html">NUT-05</a></td>
+      </tr>
+      <tr>
+      <td>11007</td>
+      <td>Duplicate inputs provided</td>
+      <td><a href="nut-03.html">NUT-03</a>, <a
+      href="nut-04.html">NUT-04</a>, <a
+      href="nut-05.html">NUT-05</a></td>
+      </tr>
+      <tr>
+      <td>11008</td>
+      <td>Duplicate outputs provided</td>
+      <td><a href="nut-03.html">NUT-03</a>, <a
+      href="nut-04.html">NUT-04</a>, <a
+      href="nut-05.html">NUT-05</a></td>
+      </tr>
+      <tr>
+      <td>11009</td>
+      <td>Inputs/Outputs of multiple units</td>
+      <td><a href="nut-03.html">NUT-03</a>, <a
+      href="nut-04.html">NUT-04</a>, <a
+      href="nut-05.html">NUT-05</a></td>
+      </tr>
+      <tr>
+      <td>11010</td>
+      <td>Inputs and outputs not of same unit</td>
+      <td><a href="nut-03.html">NUT-03</a>, <a
+      href="nut-04.html">NUT-04</a>, <a
+      href="nut-05.html">NUT-05</a></td>
+      </tr>
+      <tr>
+      <td>11011</td>
+      <td>Amountless invoice is not supported</td>
+      <td><a href="nut-05.html">NUT-05</a></td>
+      </tr>
+      <tr>
+      <td>11012</td>
+      <td>Amount in request does not equal invoice</td>
+      <td><a href="nut-05.html">NUT-05</a></td>
+      </tr>
+      <tr>
+      <td>11013</td>
+      <td>Unit in request is not supported</td>
+      <td><a href="nut-04.html">NUT-04</a>, <a
+      href="nut-05.html">NUT-05</a></td>
+      </tr>
+      <tr>
+      <td>11014</td>
+      <td>Max inputs exceeded</td>
+      <td><a href="nut-03.html">NUT-03</a>, <a
+      href="nut-05.html">NUT-05</a></td>
+      </tr>
+      <tr>
+      <td>11015</td>
+      <td>Max outputs exceeded</td>
+      <td><a href="nut-03.html">NUT-03</a>, <a
+      href="nut-04.html">NUT-04</a>, <a
+      href="nut-05.html">NUT-05</a></td>
+      </tr>
+      <tr>
+      <td>11016</td>
+      <td>Duplicate quote IDs provided</td>
+      <td><a href="nut-29.html">NUT-29</a></td>
+      </tr>
+      <tr>
+      <td>11017</td>
+      <td>Max batch size exceeded</td>
+      <td><a href="nut-29.html">NUT-29</a></td>
+      </tr>
+      <tr>
+      <td>12001</td>
+      <td>Keyset is not known</td>
+      <td><a href="nut-02.html">NUT-02</a>, <a
+      href="nut-04.html">NUT-04</a></td>
+      </tr>
+      <tr>
+      <td>12002</td>
+      <td>Keyset is inactive, cannot sign messages</td>
+      <td><a href="nut-02.html">NUT-02</a>, <a
+      href="nut-03.html">NUT-03</a>, <a
+      href="nut-04.html">NUT-04</a></td>
+      </tr>
+      <tr>
+      <td>12003</td>
+      <td>Keyset has expired</td>
+      <td><a href="nut-02.html">NUT-02</a>, <a
+      href="nut-03.html">NUT-03</a>, <a href="nut-04.html">NUT-04</a>,
+      <a href="nut-05.html">NUT-05</a></td>
+      </tr>
+      <tr>
+      <td>20001</td>
+      <td>Quote request is not paid</td>
+      <td><a href="nut-04.html">NUT-04</a></td>
+      </tr>
+      <tr>
+      <td>20002</td>
+      <td>Quote has already been issued</td>
+      <td><a href="nut-04.html">NUT-04</a></td>
+      </tr>
+      <tr>
+      <td>20003</td>
+      <td>Minting is disabled</td>
+      <td><a href="nut-04.html">NUT-04</a></td>
+      </tr>
+      <tr>
+      <td>20004</td>
+      <td>Lightning payment failed</td>
+      <td><a href="nut-05.html">NUT-05</a></td>
+      </tr>
+      <tr>
+      <td>20005</td>
+      <td>Quote is pending</td>
+      <td><a href="nut-04.html">NUT-04</a>, <a
+      href="nut-05.html">NUT-05</a>, <a
+      href="nut-29.html">NUT-29</a></td>
+      </tr>
+      <tr>
+      <td>20006</td>
+      <td>Invoice already paid</td>
+      <td><a href="nut-05.html">NUT-05</a></td>
+      </tr>
+      <tr>
+      <td>20007</td>
+      <td>Quote is expired</td>
+      <td><a href="nut-04.html">NUT-04</a>, <a
+      href="nut-05.html">NUT-05</a></td>
+      </tr>
+      <tr>
+      <td>20008</td>
+      <td>Signature for mint request invalid</td>
+      <td><a href="nut-20.html">NUT-20</a></td>
+      </tr>
+      <tr>
+      <td>20009</td>
+      <td>Pubkey required for mint quote</td>
+      <td><a href="nut-20.html">NUT-20</a></td>
+      </tr>
+      <tr>
+      <td>30001</td>
+      <td>Endpoint requires clear auth</td>
+      <td><a href="nut-21.html">NUT-21</a></td>
+      </tr>
+      <tr>
+      <td>30002</td>
+      <td>Clear authentication failed</td>
+      <td><a href="nut-21.html">NUT-21</a></td>
+      </tr>
+      <tr>
+      <td>31001</td>
+      <td>Endpoint requires blind auth</td>
+      <td><a href="nut-22.html">NUT-22</a></td>
+      </tr>
+      <tr>
+      <td>31002</td>
+      <td>Blind authentication failed</td>
+      <td><a href="nut-22.html">NUT-22</a></td>
+      </tr>
+      <tr>
+      <td>31003</td>
+      <td>Maximum BAT mint amount exceeded</td>
+      <td><a href="nut-22.html">NUT-22</a></td>
+      </tr>
+      <tr>
+      <td>31004</td>
+      <td>BAT mint rate limit exceeded</td>
+      <td><a href="nut-22.html">NUT-22</a></td>
+      </tr>
+      </tbody>
+      </table>
       <nav class="pager pager-bottom" aria-label="Nearby sections">
-        <a class="pager-prev" href="nut-25.html" rel="prev">NUT-25: BOLT12</a>
-        <a class="pager-next" href="nut-30.html" rel="next">NUT-30: Payment Method: Onchain</a>
+        <a class="pager-prev" href="nut-29.html" rel="prev">NUT-29: Batched Minting</a>
+        <a class="pager-next" href="proofs-restore-and-wallet-state.html" rel="next">Proofs, restore, and wallet state</a>
       </nav>
     </div>
   </div>

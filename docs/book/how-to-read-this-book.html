@@ -81,6 +81,8 @@
       Mint Quote</a></li>
       <li><a href="nut-29.html#nut-29" id="toc-nut-29">NUT-29: Batched
       Minting</a></li>
+      <li><a href="nut-errors.html#nut-errors" id="toc-nut-errors">NUT
+      Errors</a></li>
       </ul></li>
       <li><a
       href="proofs-restore-and-wallet-state.html#proofs-restore-and-wallet-state"
@@ -166,10 +168,11 @@
       on — but it is not the best order for a first read.</p>
       <p>I start with the core protocol: what a token is, how keys work,
       and how a mint describes itself. Then I walk through the three
-      operations every wallet cares about: mint, melt, and swap. After
-      that come wallet state, spending conditions, Lightning and other
-      payment methods, payment requests, realtime and auth, and a small
-      Nostr chapter.</p>
+      operations every wallet cares about: mint, melt, and swap. A
+      shared error table sits at the end of that chapter; later NUTs
+      keep linking to it. After that come wallet state, spending
+      conditions, Lightning and other payment methods, payment requests,
+      realtime and auth, and a small Nostr chapter.</p>
       <p>A note on mandatory versus optional: wallets and mints
       <code>MUST</code> implement NUT-00 through NUT-06. Those specs are
       split across the first two chapters, because mint, melt, and swap

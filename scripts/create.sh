@@ -22,6 +22,7 @@ inputs=(
     nuts/15.md # Partial multi-path payments (MPP)
     nuts/20.md # Signature on Mint Quote
     nuts/29.md # Batched Mint
+    nuts/error_codes.md # Mint error codes
 
     include/03-proofs-restore.md
     nuts/07.md # Token state check

@@ -26,6 +26,9 @@ local function spec_slug(title)
   if nut then
     return "nut-" .. nut:lower()
   end
+  if title:match("^NUT Errors") then
+    return "nut-errors"
+  end
   local bolt = title:match("^BOLT #(%d+)")
   if bolt then
     return "bolt-" .. string.format("%02d", tonumber(bolt))
@@ -59,6 +62,9 @@ local function spec_id_from_path(path)
   elseif spec_kind == "nut" then
     if file:match("^%d+$") then
       return "nut-" .. string.format("%02d", tonumber(file))
+    end
+    if file == "error_codes" then
+      return "nut-errors"
     end
   elseif spec_kind == "nip" then
     if file:match("^%x+$") then

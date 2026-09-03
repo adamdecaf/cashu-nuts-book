@@ -19,7 +19,7 @@ The book is compiled by Adam Shannon. The NUTs are written by their original aut
 Chapters, not NUT numbers:
 
 1. Core protocol — cryptography, mint keys, keysets, mint info (mandatory)
-2. Minting, melting, and swapping — the three verbs, plus fees and batching
+2. Minting, melting, and swapping — the three verbs, plus fees, batching, and mint error codes
 3. Proofs, restore, and wallet state — state checks, DLEQ, deterministic secrets
 4. Spending conditions — P2PK, HTLCs, pay-to-blinded-key
 5. Lightning and other payment methods — BOLT11, BOLT12, HTTP 402, on-chain

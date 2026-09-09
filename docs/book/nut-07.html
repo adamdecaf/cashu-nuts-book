@@ -172,14 +172,14 @@
       states</h4>
       <p>A proof can be in one of the following states</p>
       <ul>
-      <li>A proof is <code>UNSPENT</code> if it has not been spent
-      yet</li>
       <li>A proof is <code>PENDING</code> if it is being processed in a
       transaction (in an ongoing payment). A <code>PENDING</code> proof
       cannot be used in another transaction until it is
       <code>live</code> again.</li>
       <li>A proof is <code>SPENT</code> if it has been redeemed and its
       secret is in the list of spent secrets of the mint.</li>
+      <li>A proof is <code>UNSPENT</code> if the mint has no record of
+      it being pending or spent</li>
       </ul>
       <p><strong>Note:</strong> Before deleting spent proofs from their
       database, wallets can check if the proof is <code>SPENT</code> to

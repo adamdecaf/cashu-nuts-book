@@ -418,8 +418,8 @@
       conditions if not.</p>
       <h4 data-number="7.2.5.2" id="nut-11-active-lock">Active Lock</h4>
       <p>If the <code>locktime</code> tag is a valid unix time and the
-      mint’s local clock is less than <code>locktime</code>, the lock is
-      “active”.</p>
+      mint’s local clock is less than or equal to <code>locktime</code>
+      (<code>now &lt;= locktime</code>), the lock is “active”.</p>
       <p><a href="nut-11.html#nut-11-locktime-multisig">Locktime
       Multisig</a> conditions apply if the <code>pubkeys</code> tag is
       present, <a href="nut-11.html#nut-11-basic-case">Basic Case</a>
@@ -427,8 +427,8 @@
       <h4 data-number="7.2.5.3" id="nut-11-expired-lock">Expired
       Lock</h4>
       <p>If the <code>locktime</code> tag is a valid unix time and the
-      mint’s local clock is greater than <code>locktime</code>, the lock
-      has “expired”.</p>
+      mint’s local clock is greater than <code>locktime</code>
+      (<code>now &gt; locktime</code>), the lock has “expired”.</p>
       <p>Both <a href="nut-11.html#nut-11-locktime-multisig">Locktime
       Multisig</a> and <a
       href="nut-11.html#nut-11-refund-multisig">Refund Multisig</a>

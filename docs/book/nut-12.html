@@ -264,9 +264,10 @@ where:
       <p>In order for <code>Alice</code> to communicate the DLEQ to
       another user <code>Carol</code>, we extend the <code>Proof</code>
       (see <a href="nut-00.html">NUT-00</a>) object and include the DLEQ
-      proof. As explained below, we also need to include the blinding
-      factor <code>r</code> for the proof to be convincing to another
-      user <code>Carol</code>.</p>
+      proof. As explained below, <code>Alice</code>
+      <strong>MUST</strong> also include the blinding factor
+      <code>r</code> for the proof to be convincing to
+      <code>Carol</code>.</p>
       <pre class="json"><code>{
   &quot;id&quot;: &lt;str&gt;,
   &quot;amount&quot;: &lt;int&gt;,
@@ -287,10 +288,12 @@ where:
       <code>Carol</code>.</p>
       <blockquote>
       <p>[!IMPORTANT]</p>
-      <p><strong>Privacy:</strong> The blinding factor <code>r</code>
-      should not be shared with the mint or otherwise, the mint will be
-      able to associate the <code>BlindSignature</code> with the
-      <code>Proof</code>.</p>
+      <p><strong>Privacy:</strong> The entire <code>dleq</code> field
+      <strong>SHOULD</strong> be removed before sending a
+      <code>Proof</code> to the mint as an input. The mint can associate
+      the <code>BlindSignature</code> with the <code>Proof</code> given
+      <code>e</code> and <code>s</code>, or using the blinding factor
+      <code>r</code>.</p>
       </blockquote>
       <h3 data-number="6.3.2"
       id="nut-12-alice-minting-user-verifies-dleq-proof">Alice (minting

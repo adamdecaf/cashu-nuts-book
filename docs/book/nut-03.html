@@ -225,6 +225,11 @@
   &quot;inputs&quot;: &lt;Array[Proof]&gt;,
   &quot;outputs&quot;: &lt;Array[BlindedMessage]&gt;,
 }</code></pre>
+      <p>All <code>inputs</code> and <code>outputs</code> of a swap
+      <strong>MUST</strong> be of the same currency unit. The mint
+      <strong>MUST</strong> reject a swap that mixes units (see <a
+      href="nut-errors.html">Error Codes</a> <code>11009</code> and
+      <code>11010</code>).</p>
       <p>With curl:</p>
       <pre class="bash"><code>curl -X POST https://mint.host:3338/v1/swap -d \
 {

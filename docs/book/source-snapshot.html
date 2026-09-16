@@ -164,14 +164,14 @@
       <p>This book was built from the following commit of <a
       href="https://github.com/cashubtc/nuts">cashubtc/nuts</a>. If
       something here disagrees with upstream, upstream wins.</p>
-      <pre><code>commit 97257b8a870800615c8cb650494a76d15df5a83d
-Merge: 8c9cf2b ed28570
-Author: Jake &lt;145858188+ye0man@users.noreply.github.com&gt;
-Date:   Tue Sep 15 19:10:08 2026 +0800
+      <pre><code>commit 8f244be801a7de5811bd230cc4bc78439f4948dc
+Author: Rob Woodgate &lt;robwoodgate@users.noreply.github.com&gt;
+Date:   Tue Sep 15 21:20:54 2026 +0100
 
-    Merge pull request #444 from cashubtc/nut12-strip-dleq-before-mint
+    NUT-29: use valid curve points in the batch mint example (#405)
     
-    NUT-12: a Proof&#39;s DLEQ MUST be complete; strip it entirely for the mint</code></pre>
+    Two example output B_ values were not valid secp256k1 points, which
+    trips implementations that validate points on parse.</code></pre>
       <nav class="pager pager-bottom" aria-label="Nearby sections">
         <a class="pager-prev" href="how-to-read-this-book.html" rel="prev">How to read this book</a>
         <a class="pager-next" href="core-protocol.html" rel="next">Core protocol</a>

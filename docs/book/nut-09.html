@@ -187,13 +187,13 @@
       <p>With the data being of the form
       <code>PostRestoreRequest</code>:</p>
       <pre class="json"><code>{
-  &quot;outputs&quot;: &lt;Array[BlindedMessages]&gt;
+  &quot;outputs&quot;: &lt;Array[BlindedMessage]&gt;
 }</code></pre>
       <p><strong>Response</strong> of <code>Bob</code>:</p>
       <p>The mint <code>Bob</code> then responds with a
       <code>PostRestoreResponse</code>.</p>
       <pre class="json"><code>{
-  &quot;outputs&quot;: &lt;Array[BlindedMessages]&gt;,
+  &quot;outputs&quot;: &lt;Array[BlindedMessage]&gt;,
   &quot;signatures&quot;: &lt;Array[BlindSignature]&gt;
 }</code></pre>
       <p>The returned arrays <code>outputs</code> and
@@ -202,8 +202,8 @@
       <code>signatures[i]</code>.</p>
       <h3 data-number="6.2.1" id="nut-09-mint-info-setting">Mint info
       setting</h3>
-      <p>The [NUT-06][06] <code>MintMethodSetting</code> indicates
-      support for this feature:</p>
+      <p>The <a href="nut-06.html">NUT-06</a> <code>nuts</code> object
+      indicates support for this feature:</p>
       <pre class="json"><code>{
   &quot;9&quot;: {
     &quot;supported&quot;: true

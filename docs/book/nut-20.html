@@ -190,14 +190,15 @@
   &quot;description&quot;: &lt;str|null&gt;, // Optional
   &quot;pubkey&quot;: &lt;str|null&gt; // Optional &lt;-- New
 }</code></pre>
-      <p>with the requested <code>amount</code>,<code>unit</code>, and
+      <p>with the requested <code>amount</code>, <code>unit</code>, and
       <code>description</code> according to <a
       href="nut-04.html">NUT-04</a>.</p>
       <p><code>pubkey</code> is the compressed secp256k1 public key (33
       bytes, hex-encoded) that will be required for signature
       verification during the minting operation. The mint will only mint
       ecash after receiving a valid signature from the corresponding
-      private key in the subsequent <code>PostMintRequest</code>.</p>
+      private key in the subsequent
+      <code>PostMintBolt11Request</code>.</p>
       <blockquote>
       <p>[!IMPORTANT]</p>
       <p><strong>Privacy:</strong> To prevent the mint from being able
@@ -234,12 +235,14 @@
       <pre class="json"><code>{
   &quot;quote&quot;: &lt;str&gt;,
   &quot;request&quot;: &lt;str&gt;,
+  &quot;amount&quot;: &lt;int&gt;,
   &quot;unit&quot;:  &lt;str_enum[UNIT]&gt;,
+  &quot;method&quot;: &quot;bolt11&quot;,
   &quot;amount_paid&quot;: &lt;int&gt;,
   &quot;amount_issued&quot;: &lt;int&gt;,
   &quot;updated_at&quot;: &lt;int&gt;,
   &quot;state&quot;: &lt;str_enum[STATE]&gt;, // Deprecated, optional
-  &quot;expiry&quot;: &lt;int&gt;,
+  &quot;expiry&quot;: &lt;int|null&gt;,
   &quot;pubkey&quot;: &lt;str|null&gt; // Optional &lt;-- New
 }</code></pre>
       <p>The response is the same as the <code>bolt11</code> mint quote
@@ -253,6 +256,9 @@
       <pre class="json"><code>{
   &quot;quote&quot;: &quot;9d745270-1405-46de-b5c5-e2762b4f5e00&quot;,
   &quot;request&quot;: &quot;lnbc100n1pj4apw9...&quot;,
+  &quot;amount&quot;: 10,
+  &quot;unit&quot;: &quot;sat&quot;,
+  &quot;method&quot;: &quot;bolt11&quot;,
   &quot;amount_paid&quot;: 0,
   &quot;amount_issued&quot;: 0,
   &quot;updated_at&quot;: 1701704657,
@@ -344,7 +350,6 @@
     }
   ],
   &quot;signature&quot;: &quot;d9be080b33179387e504bb6991ea41ae0dd715e28b01ce9f63d57198a095bccc776874914288e6989e97ac9d255ac667c205fa8d90a211184b417b4ffdd24092&quot;
-
 }&#39;</code></pre>
       <p>Response of <code>Bob</code>:</p>
       <pre class="json"><code>{
@@ -365,7 +370,7 @@
       <p>If the wallet user <code>Alice</code> does not include a
       signature on the <code>PostMintBolt11Request</code> but did
       include a <code>pubkey</code> in the
-      <code>PostMintBolt11QuoteRequest</code> then <code>Bob</code>
+      <code>PostMintQuoteBolt11Request</code> then <code>Bob</code>
       <strong>MUST</strong> respond with an error. <code>Alice</code>
       <strong>CAN</strong> repeat the request with a valid
       signature.</p>
@@ -383,7 +388,7 @@
       reads</p>
       <pre class="json"><code>{
   &quot;20&quot;: {
-    &quot;supported&quot;: &lt;bool&gt;,
+    &quot;supported&quot;: &lt;bool&gt;
   }
 }</code></pre>
       <nav class="pager pager-bottom" aria-label="Nearby sections">

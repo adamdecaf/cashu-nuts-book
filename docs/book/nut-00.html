@@ -208,7 +208,7 @@ NUTs</title>
       <li><code>DOMAIN_SEPARATOR</code> constant byte string
       <code>b"Secp256k1_HashToCurve_Cashu_"</code></li>
       <li><code>x</code> message to hash</li>
-      <li><code>counter</code> uint32 counter(byte order little endian)
+      <li><code>counter</code> uint32 counter (byte order little endian)
       incremented from 0 until a point is found that lies on the
       curve</li>
       </ul>
@@ -242,7 +242,7 @@ NUTs</title>
       over the field and curve parameters defined by <a
       href="http://www.secg.org/sec2-v2.pdf">secp256k1</a>.</p>
       <h4 data-number="4.1.4.1" id="nut-00-types">Types</h4>
-      <p>Values in these specification are one of:</p>
+      <p>Values in these specifications are one of:</p>
       <ul>
       <li>Scalars: integers modulo the curve order <code>n</code></li>
       <li>Curve points: elements of the elliptic curve group (including
@@ -257,8 +257,8 @@ NUTs</title>
       another.</li>
       <li>All operations such as point addition, scalar multiplication,
       hashing, are performed on the underlying mathematical values, not
-      on their serialised byte encodings.</li>
-      <li>When a curve point is serialised as <code>hex_str</code>, it
+      on their serialized byte encodings.</li>
+      <li>When a curve point is serialized as <code>hex_str</code>, it
       is the hex encoding of the SEC1 compressed public key bytes,
       unless a NUT specifies a different encoding.</li>
       <li>Integer byte order and fixed widths are defined by each NUT
@@ -275,7 +275,7 @@ NUTs</title>
       <h3 data-number="4.1.5" id="nut-00-models">0.1 - Models</h3>
       <h4 data-number="4.1.5.1"
       id="nut-00-blindedmessage"><code>BlindedMessage</code></h4>
-      <p>An encrypted (“blinded”) secret and an amount is sent from
+      <p>An encrypted (“blinded”) secret and an amount are sent from
       <code>Alice</code> to <code>Bob</code> for <a
       href="nut-04.html">minting tokens</a> or for <a
       href="nut-03.html">swapping tokens</a>. A
@@ -324,10 +324,10 @@ NUTs</title>
   &quot;amount&quot;: int,
   &quot;id&quot;: hex_str,
   &quot;secret&quot;: str,
-  &quot;C&quot;: hex_str,
+  &quot;C&quot;: hex_str
 }</code></pre>
       <p><code>amount</code> is the amount of the <code>Proof</code>,
-      <code>secret</code> is the secret message and is a utf-8 encoded
+      <code>secret</code> is the secret message and is a UTF-8-encoded
       string (the use of a 64 character hex string generated from 32
       random bytes is recommended to prevent fingerprinting),
       <code>C</code> is the unblinded signature on <code>secret</code>
@@ -477,7 +477,7 @@ NUTs</title>
       ]
     },
     ...
-  ],
+  ]
 }</code></pre>
       <p><code>m</code> is the mint URL. The mint URL
       <strong>MUST</strong> be normalized by stripping any trailing
@@ -565,10 +565,10 @@ NUTs</title>
       <pre><code>cashuBo2F0gqJhaUgA_9SLj17PgGFwgaNhYQFhc3hAYWNjMTI0MzVlN2I4NDg0YzNjZjE4NTAxNDkyMThhZjkwZjcxNmE1MmJmNGE1ZWQzNDdlNDhlY2MxM2Y3NzM4OGFjWCECRFODGd5IXVW-07KaZCvuWHk3WrnnpiDhHki6SCQh88-iYWlIAK0mjE0fWCZhcIKjYWECYXN4QDEzMjNkM2Q0NzA3YTU4YWQyZTIzYWRhNGU5ZjFmNDlmNWE1YjRhYzdiNzA4ZWIwZDYxZjczOGY0ODMwN2U4ZWVhY1ghAjRWqhENhLSsdHrr2Cw7AFrKUL9Ffr1XN6RBT6w659lNo2FhAWFzeEA1NmJjYmNiYjdjYzY0MDZiM2ZhNWQ1N2QyMTc0ZjRlZmY4YjQ0MDJiMTc2OTI2ZDNhNTdkM2MzZGNiYjU5ZDU3YWNYIQJzEpxXGeWZN5qXSmJjY8MzxWyvwObQGr5G1YCCgHicY2FtdWh0dHA6Ly9sb2NhbGhvc3Q6MzMzOGF1Y3NhdA</code></pre>
       <h5 data-number="4.1.7.3.2" id="nut-00-binary-token">Binary
       Token</h5>
-      <p>Token can be transmitted in a binary format when applicable
-      (for example when transmitting via NFC). For this the serialised
+      <p>Tokens can be transmitted in a binary format when applicable
+      (for example when transmitting via NFC). For this the serialized
       token is prepended with a prefix and a version byte.</p>
-      <pre><code>utf8(&quot;craw&quot;) || utf8(&lt;token_version&gt;) || &lt;serialised_token&gt;</code></pre>
+      <pre><code>utf8(&quot;craw&quot;) || utf8(&lt;token_version&gt;) || &lt;serialized_token&gt;</code></pre>
       <ul>
       <li>Binary Encoding V4:
       <code>utf8("craw") || utf8("B") || cbor(token_v4_object)</code></li>

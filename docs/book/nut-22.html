@@ -286,7 +286,7 @@
       <h4 data-number="10.3.2.2" id="nut-22-keysets">Keysets</h4>
       <p>Like in <a href="nut-02.html">NUT-02</a> the mint also offers
       the endpoints returning the keysets:</p>
-      <pre><code>GET v1/auth/blind/keysets</code></pre>
+      <pre><code>GET /v1/auth/blind/keysets</code></pre>
       <p>The mint returns the same <code>GetKeysetsResponse</code>
       response types as described in <a
       href="nut-02.html">NUT-02</a>.</p>
@@ -358,7 +358,7 @@
       as base64url with the prefix <code>authA</code>:</p>
       <pre class="sh"><code>authA[base64url_authproof_json]</code></pre>
       <p>This string is a BAT.</p>
-      <p>Note that <code>base64_url</code> strings may have padding
+      <p>Note that <code>base64url</code> strings may have padding
       characters (usually <code>=</code>) at the end, which can be
       omitted. Mints <strong>MUST</strong> accept and decode both padded
       and unpadded forms.</p>
@@ -375,8 +375,8 @@
       <p>and make the request as we usually would.</p>
       <p><code>AuthProofs</code> are single-use. The wallet MUST delete
       the <code>AuthProof</code> after a successful request, and SHOULD
-      delete it even if request results in an error. If the wallet runs
-      out of <code>AuthProofs</code>, it can <a
+      delete it even if the request results in an error. If the wallet
+      runs out of <code>AuthProofs</code>, it can <a
       href="nut-22.html#nut-22-minting-blind-authentication-tokens">mint
       new ones</a> using its clear authentication token (CAT).</p>
       <h3 data-number="10.3.5" id="nut-22-mint">Mint</h3>
@@ -422,11 +422,11 @@
       character only.</p>
       <p>For example:</p>
       <ul>
-      <li><code>/v1/*</code> matches any path starting <code>/v1/</code>
-      (all endpoints)</li>
+      <li><code>/v1/*</code> matches any path starting with
+      <code>/v1/</code> (all endpoints)</li>
       <li><code>/v1/mint/*</code> matches any path that starts with
       <code>/v1/mint/</code> (all minting endpoints)</li>
-      <li><code>/v1/mint/bolt*</code> matches any path starting
+      <li><code>/v1/mint/bolt*</code> matches any path starting with
       <code>/v1/mint/bolt</code> (bolt11/12 minting endpoints)</li>
       </ul>
       <blockquote>

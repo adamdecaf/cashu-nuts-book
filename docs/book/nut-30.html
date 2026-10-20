@@ -163,7 +163,7 @@
       <h2 data-number="8.4" id="nut-30">NUT-30: Payment Method:
       Onchain</h2>
       <p><code>optional</code></p>
-      <p><code>depends on: NUT-04 NUT-05 NUT-20</code></p>
+      <p><code>depends on: NUT-04, NUT-05, NUT-20</code></p>
       <hr />
       <p>This document describes minting and melting ecash with the
       <code>onchain</code> payment method, which uses Bitcoin onchain
@@ -486,19 +486,23 @@
   &quot;quote&quot;: &quot;019e6d5a-2347-7000-83ad-72a9a83f3105&quot;,
   &quot;amount&quot;: 100000,
   &quot;unit&quot;: &quot;sat&quot;,
+  &quot;method&quot;: &quot;onchain&quot;,
   &quot;state&quot;: &quot;UNPAID&quot;,
   &quot;expiry&quot;: 1701704757,
   &quot;request&quot;: &quot;bc1q...&quot;,
   &quot;fee_options&quot;: [
     {
+      &quot;fee_index&quot;: 0,
       &quot;fee_reserve&quot;: 5000,
       &quot;estimated_blocks&quot;: 1
     },
     {
+      &quot;fee_index&quot;: 1,
       &quot;fee_reserve&quot;: 2000,
       &quot;estimated_blocks&quot;: 6
     },
     {
+      &quot;fee_index&quot;: 2,
       &quot;fee_reserve&quot;: 800,
       &quot;estimated_blocks&quot;: 144
     }
@@ -527,6 +531,7 @@
   &quot;quote&quot;: &quot;019e6d5a-2347-7000-83ad-72a9a83f3105&quot;,
   &quot;amount&quot;: 100000,
   &quot;unit&quot;: &quot;sat&quot;,
+  &quot;method&quot;: &quot;onchain&quot;,
   &quot;state&quot;: &quot;PENDING&quot;,
   &quot;expiry&quot;: 1701704757,
   &quot;request&quot;: &quot;bc1q...&quot;,
@@ -562,6 +567,7 @@
   &quot;quote&quot;: &quot;019e6d5a-2347-7000-83ad-72a9a83f3105&quot;,
   &quot;amount&quot;: 100000,
   &quot;unit&quot;: &quot;sat&quot;,
+  &quot;method&quot;: &quot;onchain&quot;,
   &quot;state&quot;: &quot;PAID&quot;,
   &quot;expiry&quot;: 1701704757,
   &quot;request&quot;: &quot;bc1q...&quot;,

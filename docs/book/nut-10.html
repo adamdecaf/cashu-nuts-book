@@ -187,7 +187,7 @@
       format, the mint can require additional conditions to be met.</p>
       <p>Caution: If the mint does not support spending conditions or a
       specific <code>kind</code> of spending condition, proofs may be
-      treated as a regular anyone-can-spend tokens. Applications need to
+      treated as regular anyone-can-spend tokens. Applications need to
       make sure to check whether the mint supports a specific
       <code>kind</code> of spending condition by checking the mint’s <a
       href="nut-06.html">info</a> endpoint.</p>
@@ -202,9 +202,8 @@
       <code>Proof</code></li>
       <li>Additional witness data satisfying the unlock conditions such
       as signatures</li>
-      <li>Outputs referring to the <code>BlindMessages</code> with new
-      unlock conditions to which the <code>Proofs</code> are spent
-      to</li>
+      <li>Outputs referring to the <code>BlindedMessages</code> with new
+      unlock conditions to which the <code>Proofs</code> are spent</li>
       </ul>
       <p>Spending conditions are defined for each individual
       <code>Proof</code> and not on a transaction level that can consist
@@ -214,7 +213,7 @@
       be valid, all <code>Proofs</code> in that transaction must be
       unlocked successfully.</p>
       <p>New <code>Secret</code>s of the outputs to which the inputs are
-      spent to are provided as <code>BlindMessages</code> which means
+      spent are provided as <code>BlindedMessages</code> which means
       that they are blind-signed and not visible to the mint until they
       are actually spent.</p>
       <h3 data-number="7.1.2" id="nut-10-well-known-secret">Well-known
@@ -232,7 +231,7 @@ kind &lt;str&gt;,
   {
     &quot;nonce&quot;: &lt;str&gt;,
     &quot;data&quot;: &lt;str&gt;,
-    &quot;tags&quot;: [[ &quot;key&quot;, &quot;value1&quot;, &quot;value2&quot;, ...],  ... ], // (optional)
+    &quot;tags&quot;: [[ &quot;key&quot;, &quot;value1&quot;, &quot;value2&quot;, ...],  ... ] // (optional)
   }
 ]</code></pre>
       <ul>
@@ -244,7 +243,7 @@ kind &lt;str&gt;,
       used for feature extensions</li>
       </ul>
       <h4 data-number="7.1.2.1" id="nut-10-tag-format">Tag format</h4>
-      <p>The optional <code>tags</code> field, is an array of arrays of
+      <p>The optional <code>tags</code> field is an array of arrays of
       non-empty strings.</p>
       <p>Each individual tag is an array of <strong>ONE or more
       strings</strong>. The first element of the tag array is known as
@@ -274,9 +273,8 @@ kind &lt;str&gt;,
       </ul>
       <h3 data-number="7.1.4" id="nut-10-mint-info-setting">Mint info
       setting</h3>
-      <p>The <a href="nut-06.html">NUT-06</a>
-      <code>MintMethodSetting</code> indicates support for this
-      feature:</p>
+      <p>The <a href="nut-06.html">NUT-06</a> <code>nuts</code> object
+      indicates support for this feature:</p>
       <pre class="json"><code>{
   &quot;10&quot;: {
     &quot;supported&quot;: true

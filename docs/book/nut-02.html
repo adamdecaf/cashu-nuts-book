@@ -224,14 +224,14 @@
       input to a transaction. The fee is given in parts per thousand
       (ppk) per input measured in the <code>unit</code> of the keyset.
       The total fee for a transaction is the sum of all fees per input
-      rounded up to the next larger integer (that that can be
-      represented with the keyset).</p>
+      rounded up to the next larger integer (that can be represented
+      with the keyset).</p>
       <p>As an example, we construct a transaction spending 3 inputs
       (<code>Proofs</code>) from a keyset with unit <code>sat</code> and
       <code>input_fee_ppk</code> of <code>100</code>. A fee of
       <code>100 ppk</code> means <code>0.1 sat</code> per input. The sum
-      of the individual fees are 300 ppk for this transaction. Rounded
-      up to the next smallest denomination, the mint charges
+      of the individual fees is 300 ppk for this transaction. Rounded up
+      to the next smallest denomination, the mint charges
       <code>1 sat</code> in total fees,
       i.e. <code>fees = ceil(0.3) == 1</code>. In this case, the fees
       for spending 1-10 inputs is 1 sat, 11-20 inputs is 2 sat and so
@@ -240,10 +240,10 @@
       id="nut-02-wallet-transaction-construction">Wallet transaction
       construction</h5>
       <p>When constructing a transaction with ecash <code>inputs</code>
-      (example: <code>/v1/swap</code> or <code>/v1/melt</code>), wallets
-      <strong>MUST</strong> add fees to the inputs or, vice versa,
-      subtract from the outputs. The mint checks the following
-      equation:</p>
+      (example: <code>/v1/swap</code> or
+      <code>/v1/melt/{method}</code>), wallets <strong>MUST</strong> add
+      fees to the inputs or, vice versa, subtract from the outputs. The
+      mint checks the following equation:</p>
       <pre class="python"><code>sum(inputs) - fees == sum(outputs)</code></pre>
       <p>Here, <code>sum(inputs)</code> and <code>sum(outputs)</code>
       mean the sum of the amounts of the inputs and outputs
@@ -308,8 +308,8 @@
     pubkeys_concat = b&quot;&quot;.join([p.serialize() for p in sorted_keys.values()])
     return &quot;00&quot; + hashlib.sha256(pubkeys_concat).hexdigest()[:14]</code></pre>
       <blockquote>
-      <p>[!CRITICAL] Wallet implementations should reject any attempt at
-      importing new keysets which IDs collide with any of the previously
+      <p>[!CAUTION] Wallet implementations should reject any attempt at
+      importing new keysets whose IDs collide with any of the previously
       added keysets.</p>
       </blockquote>
       <h4 data-number="4.3.1.5" id="nut-02-keyset-final-expiry">Keyset
@@ -419,7 +419,7 @@
       <li>If we don’t have any keys from this mint yet, get all keys:
       <code>GET /v1/keys</code> and store them</li>
       <li>Get all keysets with <code>GET /v1/keysets</code></li>
-      <li>For all new keyset returned here which we don’t have yet, get
+      <li>For each new keyset returned here which we don’t have yet, get
       it using <code>GET /v1/keys/{keyset_id}</code> and store it</li>
       <li>If any of the keysets has changed its <code>active</code>
       flag, update it in the db and use the keyset accordingly</li>

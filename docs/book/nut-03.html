@@ -174,10 +174,10 @@
       case is that <code>Alice</code> can use it to split her tokens to
       a target amount she needs to send to <code>Carol</code>, if she
       does not have the necessary amounts to compose the target amount
-      in her wallet already. The second one is that
-      <code>Carols</code>’s wallet can use it to receive tokens from
-      <code>Alice</code> by sending them as inputs to the mint and
-      receive new outputs in return.</p>
+      in her wallet already. The second one is that <code>Carol</code>’s
+      wallet can use it to receive tokens from <code>Alice</code> by
+      sending them as inputs to the mint and receive new outputs in
+      return.</p>
       <h3 data-number="5.1.1" id="nut-03-swap-to-send">Swap to send</h3>
       <p>To make this more clear, we present an example of a typical
       case of sending tokens from <code>Alice</code> to
@@ -189,13 +189,13 @@
       40 sat. For that, <code>Alice</code> requests a swap from the mint
       and uses <code>Proofs</code> worth <code>[16, 16, 32]</code> as
       inputs and asks for new outputs worth <code>[8, 32, 8, 16]</code>
-      totalling 64 sat. Notice that the first two tokens can now be
+      totaling 64 sat. Notice that the first two tokens can now be
       combined to 40 sat. The <code>Proofs</code> that
       <code>Alice</code> sent <code>Bob</code> as inputs of the swap
       operation are now invalidated.</p>
       <p>Note: In order to preserve privacy around the amount that a
       client might want to send to another user and keep the rest as
-      change, the client <strong>SHOULD</strong> ensure that the list
+      change, the client <strong>SHOULD</strong> ensure that the list of
       requested outputs is ordered by amount in ascending order. As an
       example of what to avoid, a request for outputs expressed like so:
       <code>[16, 8, 2, 64, 8]</code> might imply the client is preparing
@@ -223,7 +223,7 @@
       <code>PostSwapRequest</code>:</p>
       <pre class="json"><code>{
   &quot;inputs&quot;: &lt;Array[Proof]&gt;,
-  &quot;outputs&quot;: &lt;Array[BlindedMessage]&gt;,
+  &quot;outputs&quot;: &lt;Array[BlindedMessage]&gt;
 }</code></pre>
       <p>All <code>inputs</code> and <code>outputs</code> of a swap
       <strong>MUST</strong> be of the same currency unit. The mint

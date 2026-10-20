@@ -385,11 +385,11 @@
       scheme</a>).</p>
       <p>If a swap transaction has <code>n</code> inputs and
       <code>m</code> outputs, the message to sign becomes:</p>
-      <pre><code>msg = secret_0 || C_0 || ... || secret_n || C_n || amount_0 ||  B_0 || ... || amount_m || B_m</code></pre>
+      <pre><code>msg = secret_0 || C_0 || ... || secret_n || C_n || amount_0 || B_0 || ... || amount_m || B_m</code></pre>
       <p>Here, <code>||</code> denotes string concatenation. The
       <code>C</code> of each input and <code>B_</code> of each output
       are <strong>hex strings</strong> and <code>amount</code> is a
-      UTF-encoded string.</p>
+      UTF-8-encoded string.</p>
       <h6 data-number="7.2.4.2.1.2"
       id="nut-11-aggregation-for-melt">Aggregation for
       <code>melt</code></h6>
@@ -403,7 +403,7 @@
       <p>Here, <code>||</code> denotes string concatenation. The
       <code>C</code> of each input and <code>B_</code> of each output
       are <strong>hex strings</strong> and <code>amount</code> is a
-      UTF-encoded string.</p>
+      UTF-8-encoded string.</p>
       <h3 data-number="7.2.5" id="nut-11-locktime-tag">Locktime Tag</h3>
       <p>The <code>locktime</code> tag signals which set of locking
       rules the mint should apply. There are three possible states the
@@ -467,7 +467,7 @@
       will require at least <code>n_sigs</code> of those public keys to
       provide a valid signature.</p>
       <p>If the number of public keys with valid signatures is greater
-      or equal to the number specified in <code>n_sigs</code> (or
+      than or equal to the number specified in <code>n_sigs</code> (or
       <code>1</code> if <code>n_sigs</code> is not present), the
       transaction is valid. The signatures are provided in an array of
       strings in the <code>P2PKWitness</code> object.</p>
@@ -500,7 +500,7 @@
       the mint will require at least <code>n_sigs_refund</code> of those
       <code>refund</code> public keys to provide a valid signature.</p>
       <p>If the number of <code>refund</code> public keys with valid
-      signatures is greater or equal to the number specified in
+      signatures is greater than or equal to the number specified in
       <code>n_sigs_refund</code> (or <code>1</code> if
       <code>n_sigs_refund</code> is not present), the transaction is
       valid. The signatures are provided in an array of strings in the
@@ -601,9 +601,8 @@
       </ul>
       <h3 data-number="7.2.9" id="nut-11-mint-info-setting">Mint info
       setting</h3>
-      <p>The <a href="nut-06.html">NUT-06</a>
-      <code>MintMethodSetting</code> indicates support for this
-      feature:</p>
+      <p>The <a href="nut-06.html">NUT-06</a> <code>nuts</code> object
+      indicates support for this feature:</p>
       <pre class="json"><code>{
   &quot;11&quot;: {
     &quot;supported&quot;: true

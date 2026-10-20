@@ -180,8 +180,8 @@ NUTs</title>
       same private key <code>a</code> for creating its public key
       <code>A</code> (<a href="nut-01.html">NUT-01</a>) and for signing
       the BlindedMessage <code>B'</code>. <code>Bob</code> returns the
-      DLEQ proof additional to the blind signature <code>C'</code> for a
-      mint or swap operation.</p>
+      DLEQ proof in addition to the blind signature <code>C'</code> for
+      a mint or swap operation.</p>
       <p>The complete DLEQ proof reads</p>
       <pre><code># DLEQ Proof
 
@@ -220,11 +220,11 @@ where:
       <h4 data-number="6.3.1.1" id="nut-12-hash-function">Hash
       function</h4>
       <p>The hash function
-      <code>hash(x: &lt;Array&lt;[PublicKey]&gt;) -&gt; bytes</code>
-      generates a deterministic SHA256 hash for a given input list of
+      <code>hash(x: Array[PublicKey]) -&gt; bytes</code> generates a
+      deterministic SHA256 hash for a given input list of
       <code>PublicKey</code>. The uncompressed (32+32+1)-byte
       hexadecimal representations (130 characters) of each
-      <code>PublicKey</code> is concatenated before taking the SHA256
+      <code>PublicKey</code> are concatenated before taking the SHA256
       hash.</p>
       <pre class="python"><code>def hash_e(*publickeys: PublicKey) -&gt; bytes:
     e_ = &quot;&quot;
@@ -242,7 +242,7 @@ where:
       id="nut-12-mint-to-user-dleq-in-blindsignature">Mint to user: DLEQ
       in <code>BlindSignature</code></h4>
       <p>The mint produces these DLEQ proofs when returning
-      <code>BlindSignature</code>’s in the responses for minting (<a
+      <code>BlindSignature</code>s in the responses for minting (<a
       href="nut-04.html">NUT-04</a>) and swapping (<a
       href="nut-03.html">NUT-03</a>) tokens. The
       <code>BlindSignature</code> object is extended in the following
@@ -370,9 +370,8 @@ R1 = ... (same as Alice)</code></pre>
       <strong>MUST</strong> verify the proof.</p>
       <h3 data-number="6.3.4" id="nut-12-mint-info-setting">Mint info
       setting</h3>
-      <p>The <a href="nut-06.html">NUT-06</a>
-      <code>MintMethodSetting</code> indicates support for this
-      feature:</p>
+      <p>The <a href="nut-06.html">NUT-06</a> <code>nuts</code> object
+      indicates support for this feature:</p>
       <pre class="json"><code>{
   &quot;12&quot;: {
     &quot;supported&quot;: true

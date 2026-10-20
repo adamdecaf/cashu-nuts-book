@@ -164,10 +164,10 @@
       <p><code>optional</code></p>
       <p><code>depends on: NUT-04</code></p>
       <p><code>uses: NUT-20</code></p>
+      <hr />
       <p>This spec describes how a wallet can mint multiple quotes in
       one batched operation by requesting blind signatures for multiple
       quotes in a single atomic request.</p>
-      <hr />
       <h3 data-number="5.7.1" id="nut-29-batch-checking-mint-quotes">1.
       Batch Checking Mint Quotes</h3>
       <p>Before minting, the wallet SHOULD verify each mint quote’s
@@ -276,7 +276,7 @@ Content-Type: application/json
       <p>Below is an example for minting two NUT-20 locked bolt11 mint
       quotes.</p>
       <h6 data-number="5.7.2.1.0.1" id="nut-29-request-1">Request</h6>
-      <pre class="http"><code>POST https://mint.host:3338/v1/mint/bolt12/batch
+      <pre class="http"><code>POST https://mint.host:3338/v1/mint/bolt11/batch
 Content-Type: application/json
 
 {

@@ -192,12 +192,15 @@
       </ol>
       <h4 data-number="11.1.2.1"
       id="nut-27-example-implementation">Example Implementation</h4>
-      <pre class="javascript"><code>import { mnemonicToSeedSync } from &quot;@scure/bip39&quot;;
+      <pre class="typescript"><code>import { mnemonicToSeedSync } from &quot;@scure/bip39&quot;;
 import { sha256 } from &quot;@noble/hashes/sha256&quot;;
 import { bytesToHex } from &quot;@noble/hashes/utils&quot;;
 import { getPublicKey } from &quot;nostr-tools&quot;;
 
-function deriveMintBackupKeys(mnemonic: string): { privateKeyHex: string; publicKeyHex: string } {
+function deriveMintBackupKeys(mnemonic: string): {
+  privateKeyHex: string;
+  publicKeyHex: string;
+} {
   // Derive seed from mnemonic
   const seed: Uint8Array = mnemonicToSeedSync(mnemonic);
   const domainSeparator = new TextEncoder().encode(&quot;cashu-mint-backup&quot;);

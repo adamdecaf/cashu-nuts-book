@@ -191,7 +191,7 @@ NUTs</title>
       <code>amount_total = amount_1 + amount_2 + ...</code> that each
       must be covered by her individual balances on the mints she wants
       to use for the payment. She constructs multiple
-      <code>PostMeltQuoteBolt11Request</code>’s that each include the
+      <code>PostMeltQuoteBolt11Request</code>s that each include the
       corresponding partial amount in the payment option (see below)
       that she sends to all mints she wants to use for the payment. The
       mints then respond with a normal
@@ -236,7 +236,7 @@ NUTs</title>
       <code>unit</code> pairs.</p>
       <p><code>MultipathPaymentSetting</code> is of the form:</p>
       <pre class="json"><code>{
-  [
+  &quot;methods&quot;: [
     {
       &quot;method&quot;: &lt;str&gt;,
       &quot;unit&quot;: &lt;str&gt;

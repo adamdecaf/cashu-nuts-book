@@ -162,7 +162,7 @@
       </nav>
       <h2 data-number="8.1" id="nut-23">NUT-23: BOLT11</h2>
       <p><code>optional</code></p>
-      <p><code>depends on: NUT-04 NUT-05</code></p>
+      <p><code>depends on: NUT-04, NUT-05</code></p>
       <hr />
       <p>This document describes minting and melting ecash with the
       <code>bolt11</code> payment method, which uses Lightning Network
@@ -315,12 +315,14 @@
       include <code>Proofs</code> of <em>at least</em>
       <code>total_amount = amount + fee_reserve + fee</code> where
       <code>fee</code> is calculated from the keyset’s
-      <code>input_fee_ppk</code> as described in [NUT-02][02].</p>
+      <code>input_fee_ppk</code> as described in <a
+      href="nut-02.html">NUT-02</a>.</p>
       <h4 data-number="8.1.3.1" id="nut-23-melting-tokens">Melting
       Tokens</h4>
       <p>For the <code>bolt11</code> method, the wallet can include an
       optional <code>outputs</code> field in the melt request to receive
-      change for overpaid Lightning fees (see [NUT-08][08]):</p>
+      change for overpaid Lightning fees (see <a
+      href="nut-08.html">NUT-08</a>):</p>
       <pre class="json"><code>{
   &quot;quote&quot;: &lt;str&gt;,
   &quot;inputs&quot;: &lt;Array[Proof]&gt;,
@@ -361,7 +363,7 @@
       <pre class="bash"><code>curl -X GET http://localhost:3338/v1/melt/quote/bolt11/019e6d5a-2347-7000-8449-370fefb42fed</code></pre>
       <p>Melt request:</p>
       <pre class="bash"><code>curl -X POST https://mint.host:3338/v1/melt/bolt11 -d \
-&#39;{&quot;quote&quot;: &quot;019e6d5a-2347-7000-813e-a11ea6e419e7&quot;, &quot;inputs&quot;: [...]}&#39;</code></pre>
+&#39;{&quot;quote&quot;: &quot;019e6d5a-2347-7000-8449-370fefb42fed&quot;, &quot;inputs&quot;: [...]}&#39;</code></pre>
       <p>Successful melt response:</p>
       <pre class="json"><code>{
   &quot;quote&quot;: &quot;019e6d5a-2347-7000-8449-370fefb42fed&quot;,

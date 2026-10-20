@@ -206,7 +206,7 @@
   &quot;params&quot;: &lt;str_WsRequestParams&gt;,
   &quot;id&quot;: &lt;int&gt;
 }</code></pre>
-      <p><code>WsRequestMethod</code> is a enum of strings with the
+      <p><code>WsRequestMethod</code> is an enum of strings with the
       supported commands <code>"subscribe"</code> and
       <code>"unsubscribe"</code>:</p>
       <pre class="ts"><code>enum WsRequestMethod {
@@ -267,9 +267,9 @@
       notifications to the wallet.</p>
       <h5 data-number="10.1.2.1.2"
       id="nut-17-command-unsubscribe">Command: Unsubscribe</h5>
-      <p>The wallet should always unsubscribe any subscriptions that is
+      <p>The wallet should always unsubscribe any subscriptions that it
       isn’t interested in anymore. The parameters for the
-      <code>"unsubscribe"</code> command is only the subscription
+      <code>"unsubscribe"</code> command are only the subscription
       ID:</p>
       <pre class="json"><code>{
   &quot;subId&quot;: &lt;string&gt;
@@ -291,7 +291,7 @@
       corresponds to the subscription ID.</p>
       <h4 data-number="10.1.2.3"
       id="nut-17-notifications">Notifications</h4>
-      <p><code>WsNotification</code>’s are sent from the mint to the
+      <p><code>WsNotification</code>s are sent from the mint to the
       wallet and contain subscription data in the following format</p>
       <pre class="ts"><code>{
   &quot;jsonrpc&quot;: &quot;2.0&quot;,
@@ -319,7 +319,7 @@
     &quot;code&quot;: -32601,
     &quot;message&quot;: &quot;Human readable error message&quot;
   },
-  &quot;id&quot;: &quot;1&quot;
+  &quot;id&quot;: 1
 }</code></pre>
       <h4 data-number="10.1.2.5"
       id="nut-17-example-proofstate-subscription">Example:
@@ -328,7 +328,7 @@
       <code>Proof</code>, the wallet establishes a websocket connection
       to <code>https://mint.com/v1/ws</code> and sends a
       <code>WsRequest</code> with a <code>filters</code> chosen to be
-      the a <code>Proof.Y</code> value of the <code>Proof</code> (see <a
+      the <code>Proof.Y</code> value of the <code>Proof</code> (see <a
       href="nut-00.html">NUT-00</a>). Note that <code>filters</code> is
       an array meaning multiple subscriptions of the same
       <code>kind</code> can be made in the same request.</p>
@@ -418,8 +418,8 @@
             &quot;bolt11_mint_quote&quot;,
             &quot;bolt11_melt_quote&quot;,
             &quot;proof_state&quot;
-            ]
-        },
+          ]
+        }
       ]
     }
 }</code></pre>

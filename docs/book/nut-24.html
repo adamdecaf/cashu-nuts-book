@@ -169,8 +169,8 @@
       <p>This NUT describes how Cashu tokens can be used with HTTP 402
       Payment Required responses to enable payments for HTTP
       resources.</p>
-      <h4 data-number="8.3.0.1" id="nut-24-server-response">Server
-      response</h4>
+      <h3 data-number="8.3.1" id="nut-24-server-response">Server
+      response</h3>
       <p>HTTP servers may respond with the HTTP status code 402 and an
       <code>X-Cashu</code> header containing a payment request, encoded
       in either <a href="nut-18.html">NUT-18</a> <code>creqA</code> or
@@ -194,22 +194,21 @@
       </ul>
       <p>Note: there is no transport field since we expect an in-band
       payment.</p>
-      <h4 data-number="8.3.0.2" id="nut-24-client-payment">Client
-      payment</h4>
-      <p>After receiving a 402 response with a <code>X-Cashu</code>
+      <h3 data-number="8.3.2" id="nut-24-client-payment">Client
+      payment</h3>
+      <p>After receiving a 402 response with an <code>X-Cashu</code>
       header, the client may retry the request with a
       <code>cashuB</code> token in the <code>X-Cashu</code> header as
       payment.</p>
       <p>The token MUST be from one of the mints listed in the
-      <code>mints</code> array, and MUST be of the same
-      <code>unit</code> and greater than or equal to the
-      <code>amount</code>.</p>
-      <h3 data-number="8.3.1" id="nut-24-payment-response">Payment
+      <code>m</code> array, and MUST be of the same <code>u</code> unit
+      and greater than or equal to the <code>a</code> amount.</p>
+      <h3 data-number="8.3.3" id="nut-24-payment-response">Payment
       response</h3>
       <p>If the server receives tokens from a mint that is not in the
-      <code>mints</code> array, an incorrect <code>unit</code>, an
+      <code>m</code> array, an incorrect <code>u</code> unit, an
       insufficient amount of tokens, or with insufficient locking
-      conditions, it should respond with a HTTP <code>400</code> status
+      conditions, it should respond with an HTTP <code>400</code> status
       code.</p>
       <nav class="pager pager-bottom" aria-label="Nearby sections">
         <a class="pager-prev" href="nut-25.html" rel="prev">NUT-25: BOLT12</a>

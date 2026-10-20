@@ -189,7 +189,7 @@
       <h3 data-number="4.2.2"
       id="nut-01-supported-currency-units">Supported Currency Units</h3>
       <p>A mint may support any currency unit(s) they can mint (<a
-      href="nut-04.html">NUT-04</a>) and melt(<a
+      href="nut-04.html">NUT-04</a>) and melt (<a
       href="nut-05.html">NUT-05</a>), either directly or indirectly,
       including:</p>
       <ul>
@@ -238,7 +238,7 @@
       <code>{&lt;amount_1&gt; : &lt;mint_pubkey_1&gt;, &lt;amount_2&gt; : &lt;mint_pubkey_2&gt;, ...}</code>
       for each <code>&lt;amount_i&gt;</code> of the amounts the mint
       <code>Bob</code> supports and the corresponding public key
-      <code>&lt;mint_pubkey_1&gt;</code>, that is <code>K_i</code> (see
+      <code>&lt;mint_pubkey_i&gt;</code>, that is <code>K_i</code> (see
       <a href="nut-00.html">NUT-00</a>). The mint <strong>MUST</strong>
       use the <a
       href="https://learnmeabitcoin.com/technical/public-key#public-key-format">compressed
@@ -256,7 +256,7 @@
       &quot;unit&quot;: &lt;currency_unit_str&gt;,
       &quot;active&quot;: &lt;bool&gt;,
       &quot;input_fee_ppk&quot;: &lt;int|null&gt;,
-      &quot;final_expiry&quot;: &lt;unix_timestamp_int|null&gt;
+      &quot;final_expiry&quot;: &lt;unix_timestamp_int|null&gt;,
       &quot;keys&quot;: {
         &lt;amount_int&gt;: &lt;public_key_str&gt;,
         ...

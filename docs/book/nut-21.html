@@ -171,7 +171,7 @@
       protect chosen endpoints from access by requiring user
       authentication. Only users that provide a clear authentication
       token (CAT) from the specified OpenID Connect (OIDC) service can
-      use the protected endpoints. The CAT is an Oauth 2.0 Access token
+      use the protected endpoints. The CAT is an OAuth 2.0 access token
       (also known as the <code>access_token</code>) commonly in the form
       of a JWT that contains user information, a signature from the OIDC
       service, and an expiry time. To access protected endpoints, the
@@ -261,13 +261,13 @@
       character only.</p>
       <p>For example:</p>
       <ul>
-      <li><code>/v1/*</code> matches any path starting <code>/v1/</code>
-      (all endpoints)</li>
+      <li><code>/v1/*</code> matches any path starting with
+      <code>/v1/</code> (all endpoints)</li>
       <li><code>/v1/auth/*</code> matches any path that starts with
       <code>/v1/auth/</code> (all auth endpoints)</li>
       <li><code>/v1/mint/*</code> matches any path that starts with
       <code>/v1/mint/</code> (all minting endpoints)</li>
-      <li><code>/v1/mint/bolt*</code> matches any path starting
+      <li><code>/v1/mint/bolt*</code> matches any path starting with
       <code>/v1/mint/bolt</code> (bolt11/12 minting endpoints)</li>
       </ul>
       <p>In the example above, the <code>/v1/auth/blind/mint</code> path

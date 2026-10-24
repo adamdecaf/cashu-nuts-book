@@ -497,8 +497,12 @@ NUTs</title>
       encoded as hexadecimal strings. Implementations MUST convert
       between hex strings and raw byte arrays when translating between
       JSON and CBOR representations.</p>
-      <p>Optional fields MAY be omitted if not present. Receivers MUST
-      ignore unknown fields to preserve forward compatibility.</p>
+      <p>Optional fields <strong>MAY</strong> be omitted if not present.
+      Receivers <strong>MUST</strong> ignore unknown fields to preserve
+      forward compatibility. Map key order is not significant: encoders
+      <strong>MAY</strong> emit keys in any order and receivers
+      <strong>MUST</strong> accept any order, so encoded tokens are not
+      byte-comparable across implementations.</p>
       <h5 data-number="4.1.7.3.1" id="nut-00-short-keyset-id">Short
       keyset ID</h5>
       <p>To reduce the size of the <code>i</code> field and the overall

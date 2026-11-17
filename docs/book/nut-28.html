@@ -237,7 +237,11 @@
 ): bigint {
   // Calculate x-only ECDH shared point (Zx)
   const Zx = point.multiply(scalar).toBytes(true).slice(1);
-  const iByte = new Uint8Array([slotIndex &amp; 0xff]);
+  // One index byte: refuse values outside 0-255.
+  if (!Number.isInteger(slotIndex) || slotIndex &lt; 0 || slotIndex &gt; 255) {
+    throw new Error(&quot;P2BK: slot index out of range&quot;);
+  }
+  const iByte = new Uint8Array([slotIndex]);
   // Derive deterministic blinding factor (r):
   // Note: bytesToNumber does NOT reduce modulo n
   let r: bigint = bytesToNumber(sha256(Bytes.concat(P2BK_DST, Zx, iByte)));

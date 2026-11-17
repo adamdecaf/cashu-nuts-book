@@ -3,11 +3,9 @@
 This book was built from the following commit of [cashubtc/nuts](https://github.com/cashubtc/nuts). If something here disagrees with upstream, upstream wins.
 
 ```
-commit 1363de413294e2ef3a57b16950f9506af38fffc2
+commit a5559d99e244f4fe126b492f55d1bc050d1a7e64
 Author: Rob Woodgate <robwoodgate@users.noreply.github.com>
-Date:   Fri Oct 23 19:03:23 2026 +0100
+Date:   Tue Nov 17 10:59:28 2026 +0000
 
-    Merge pull request #402 from robwoodgate/nut28-htlc-example
-    
-    tests: add NUT-28 HTLC example proof
+    NUT-28: refuse a slot index outside 0-255 (#470)
 ```

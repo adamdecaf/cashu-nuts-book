@@ -173,13 +173,12 @@
       <code>Bob</code> via <code>GET /v1/keys</code>. The set of all
       public keys for a set of amounts is called a <em>keyset</em>.</p>
       <p>The mint responds only with its <code>active</code> keysets.
-      Keysets are <code>active</code> if the mint will sign outputs with
-      it. The mint will accept tokens from inactive keysets as inputs
-      but will not sign with them for new outputs. The
-      <code>active</code> keysets can change over time, for example due
-      to key rotation. A list of all keysets, active and inactive, can
-      be requested separately (see <a
-      href="nut-02.html">NUT-02</a>).</p>
+      Keysets are <code>active</code> if the mint accepts new outputs on
+      them. The mint will accept tokens from inactive keysets as inputs
+      but will not accept new outputs on them. The <code>active</code>
+      keysets can change over time, for example due to key rotation. A
+      list of all keysets, active and inactive, can be requested
+      separately (see <a href="nut-02.html">NUT-02</a>).</p>
       <p>Note that a mint can support multiple keysets at the same time
       but will only respond with the active keysets on the endpoint
       <code>GET /v1/keys</code>. A wallet can ask for the keys of a
@@ -264,10 +263,10 @@
     }
   ]
 }</code></pre>
-      <p>Here, <code>active</code> indicates whether the mint will sign
-      new outputs with this keyset, and <code>input_fee_ppk</code> is
-      the fee in parts per thousand (ppk) per input spent from this
-      keyset (see <a href="nut-02.html">NUT-02</a>).</p>
+      <p>Here, <code>active</code> indicates whether the mint accepts
+      new outputs on this keyset, and <code>input_fee_ppk</code> is the
+      fee in parts per thousand (ppk) per input spent from this keyset
+      (see <a href="nut-02.html">NUT-02</a>).</p>
       <h3 data-number="4.2.5" id="nut-01-example-response">Example
       response</h3>
       <pre class="json"><code>{

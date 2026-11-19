@@ -197,24 +197,38 @@
       <p>Mints can have multiple keysets at the same time but
       <strong>MUST</strong> have at least one <code>active</code> keyset
       (see <a href="nut-01.html">NUT-01</a>). The <code>active</code>
-      property determines whether the mint allows generating new ecash
-      from this keyset. <code>Proofs</code> from inactive keysets with
+      property determines whether the mint accepts new outputs on this
+      keyset. <code>Proofs</code> from inactive keysets with
       <code>active=false</code> are still accepted as inputs but new
       outputs (<code>BlindedMessages</code> and
       <code>BlindSignatures</code>) <strong>MUST</strong> be from
-      <code>active</code> keysets only.</p>
+      keysets that are <code>active</code> when the mint accepts the
+      request.</p>
+      <p>A request that carries outputs is accepted when the mint has
+      validated it and recorded its acceptance by marking its inputs
+      <code>PENDING</code> or <code>SPENT</code>, or by increasing
+      <code>amount_issued</code> on its mint quote. A rejected request
+      changes nothing.</p>
+      <p>Acceptance binds the outputs to their keyset. The mint
+      <strong>MUST</strong> sign them using that keyset, even if it is
+      deactivated before signing is complete, and <strong>MUST
+      NOT</strong> substitute another keyset.</p>
+      <p>For swap and mint, acceptance and signing are a single step.
+      For melt, blank change outputs (<a href="nut-08.html">NUT-08</a>)
+      are accepted with the request but signed only after the payment
+      completes.</p>
       <p>To rotate keysets, a mint can generate a new active keyset and
-      inactivate an old one. If the <code>active</code> flag of an old
-      keyset is set to <code>false</code>, no new ecash from this keyset
-      can be generated and the outstanding ecash supply of that keyset
-      can be taken out of circulation as wallets rotate their ecash to
+      deactivate an old one. If the <code>active</code> flag of an old
+      keyset is set to <code>false</code>, the mint accepts no new
+      outputs on it and the outstanding ecash supply of that keyset can
+      be taken out of circulation as wallets rotate their ecash to
       active keysets.</p>
       <p>Wallets <strong>SHOULD</strong> prioritize swaps with
       <code>Proofs</code> from inactive keysets (see <a
       href="nut-03.html">NUT-03</a>) so they can quickly get rid of
       them. Wallets <strong>CAN</strong> swap their entire balance from
       an inactive keyset to an active one as soon as they detect that
-      the keyset was inactivated. When constructing outputs for a
+      the keyset was deactivated. When constructing outputs for a
       transaction, wallets <strong>MUST</strong> choose only
       <code>active</code> keysets (see <a
       href="nut-00.html">NUT-00</a>).</p>
@@ -349,7 +363,7 @@
 }</code></pre>
       <p>Here, <code>id</code> is the keyset ID, <code>unit</code> is
       the unit string (e.g. “sat”) of the keyset, <code>active</code>
-      indicates whether new ecash can be minted with this keyset, and
+      indicates whether the mint accepts new outputs on this keyset, and
       <code>input_fee_ppk</code> is the fee (per thousand units) to
       spend one input spent from this keyset. If
       <code>input_fee_ppk</code> is not given, we assume it to be

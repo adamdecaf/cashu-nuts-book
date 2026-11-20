@@ -260,12 +260,11 @@
       and correspond to the signatures by one or more signing public
       keys.</p>
       <h3 data-number="7.2.3" id="nut-11-tags">Tags</h3>
-      <p>More complex spending conditions can be defined in the tags in
-      <code>Secret.tags</code>. All tags are optional. Tags are arrays
-      with two or more strings being
-      <code>["key", "value1", "value2", ...]</code>. We denote a
-      specific tag in a proof by its <code>key</code>.</p>
-      <p>Supported tags are:</p>
+      <p>More complex spending conditions can be defined using tags (<a
+      href="nut-10.html">NUT-10</a>) in <code>Secret.tags</code>. All
+      tags are optional. We denote a specific tag in a proof by its
+      <code>key</code>.</p>
+      <p>Spending condition tags are:</p>
       <ul>
       <li><code>sigflag: &lt;str_enum[SIG_FLAG]&gt;</code> sets the <a
       href="nut-11.html#nut-11-signature-flag">signature flag</a></li>
@@ -286,10 +285,12 @@
       Multisig</a> public keys providing valid signatures after
       <code>locktime</code> expires</li>
       </ul>
-      <p>Each of the above tags may appear exactly <strong>ONCE</strong>
-      in a P2PK secret. If a tag appears more than once, the P2PK secret
-      is malformed and the Proof <strong>MUST</strong> be rejected as
-      unspendable.</p>
+      <p>If a spending condition tag appears more than once, or has no
+      value (“key only”), the P2PK secret is malformed and the Proof
+      <strong>MUST</strong> be rejected as unspendable.</p>
+      <p>A secret <strong>MAY</strong> contain other <a
+      href="nut-10.html">NUT-10</a> tags. A mint <strong>MUST</strong>
+      ignore them when evaluating the P2PK lock.</p>
       <p>If <code>n_sigs</code> or <code>n_sigs_refund</code> is not a
       positive integer, or exceeds the total number of keys in its
       pathway, the P2PK secret is malformed and the Proof

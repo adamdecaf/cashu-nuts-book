@@ -200,7 +200,9 @@ NUTs</title>
       unlocking the HTLC is in the witness
       <code>Proof.witness.preimage</code>. All additional tags from P2PK
       locks can also be used here, allowing a locktime, signature flag,
-      and multisig (see <a href="nut-11.html">NUT-11</a>).</p>
+      and multisig (see <a href="nut-11.html">NUT-11</a>). The <a
+      href="nut-11.html">NUT-11</a> rules for malformed tags apply to
+      <code>HTLC</code> secrets too.</p>
       <p>Here is a concrete example of a <code>Secret</code> of kind
       <code>HTLC</code>:</p>
       <pre class="json"><code>[
